@@ -7,7 +7,14 @@ var {suggestionChannels, votesNeeded, suggestionChannelBot} = require('../config
 module.exports = async (reaction, user) => {
   //* Check if channel ID = one of the suggestion channels
   if(suggestionChannels.includes(reaction.message.channel.id)) {
-    debug("info", `${user.tag} reacted with ${reaction.emoji.name} on ${reaction.message.id}`)
+    //* Disallow users reacting to their own suggestion
+    if(reaction.message.author.id == user.id && user.id != "531254995639861260") {
+      debug("info", `${user.tag} reacted to their own suggestion on ${reaction.message.id}`)
+      reaction.remove(user) 
+      return
+    }
+
+    if(user.id != "531254995639861260") debug("info", `${user.tag} reacted with ${reaction.emoji.name} on ${reaction.message.id}`)
     //* Check if message is already handled
     var handledMessageIDs = JSON.parse(await fs.readFileSync('./handledSuggestions.json', 'utf8'))
     //* Get its upVotes & downVotes
