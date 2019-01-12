@@ -23,8 +23,10 @@ module.exports = async (client) => {
 
     //* Add reactions if missing
     messages.map(async msg => {
-      await msg.react("528944776867741716")
-      await msg.react("528948590739980289")
+      if(!msg.reactions.find(reaction => reaction.emoji.id == "528944776867741716") ||
+        !msg.reactions.find(reaction => reaction.emoji.id == "528948590739980289"))
+        msg.react("528944776867741716")
+        .then(() => msg.react("528948590739980289"))
     })
 
     messages = messages.filter(msg => handledMessageIDs.find(suggestion => suggestion.message == msg.id) == undefined)
