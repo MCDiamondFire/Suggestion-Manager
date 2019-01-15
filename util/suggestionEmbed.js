@@ -24,11 +24,11 @@ function getColor(votes) {
   var ratio = votes[0] - votes[1]
 
   switch(true) {
-    case (ratio <= 17):
+    case (ratio < 22):
       return "#45B8FF"
-    case (ratio <= 21):
+    case (ratio < 26):
       return "#84E1FB"
-    case (ratio <= 25):
+    case (ratio < 30):
       return "#FFD655"
     case (ratio >= 30):
       return "#FF8200"
