@@ -8,7 +8,13 @@ module.exports = async (client) => {
   
   handledMessageIDs.map(async suggestion => {
     var message = await client.guilds.get(serverID).channels.get(suggestion.channel).fetchMessage(suggestion.message)
+    .catch(err => {return})
     var botMessage = await client.guilds.get(serverID).channels.get(suggestionChannelBot).fetchMessage(suggestion.response)
+    .catch(err => {return})
+
+    //TODO Delete messages from file
+    if(message == undefined) return
+    if(botMessage == undefined) return
 
     var upVotes = message.reactions.find(reaction => reaction.emoji.id == "528944776867741716"),
       downVotes = message.reactions.find(reaction => reaction.emoji.id == "528948590739980289")
