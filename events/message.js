@@ -16,10 +16,8 @@ module.exports = async message => {
   || message.channel.id == "528935415982587904") && message.cleanContent.length > 15) {
     var embed = new Discord.RichEmbed()
     .setAuthor(message.member.displayName, message.author.avatarURL)
-    .setURL(`https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`)
     .setColor("#00FF8C")
-    .setDescription(message.cleanContent.length < 120 ? message.cleanContent : message.cleanContent.slice(0, 120) + "...")
-    .setTitle(`:incoming_envelope: Jump to ${suggestionChannels.includes(message.channel.id) ? "suggestion" : "issue"}`)
+    .setDescription(`[:incoming_envelope: New ${suggestionChannels.includes(message.channel.id) ? "suggestion" : "issue"} posted](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})\n\n${message.cleanContent.length < 120 ? message.cleanContent : message.cleanContent.slice(0, 120) + "..."}`)
     .setFooter(`Posted in #${message.channel.name}`)
     
 
