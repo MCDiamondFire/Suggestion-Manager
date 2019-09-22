@@ -1,20 +1,36 @@
 {
   "name": "suggestion-manager",
-  "version": "1.0.2",
-  "description": "A simple bot that moves suggestions with lots of upvotes to a different channel.",
+  "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "compile": "tsc && tsc devMode && node devMode.js && cd dist && npm i --production --prefer-offline",
+    "dev": "nodemon --quiet --exec 'node devMode.js & cd dist && node -r source-map-support/register index.js' -w dist -e js",
+    "start": "cd dist && node index"
   },
-  "author": "Timeraa",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MCDiamondFire/Suggestion-Manager.git"
+  },
+  "author": "Timeraa & RedstoneDaedalus",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MCDiamondFire/Suggestion-Manager/issues"
+  },
+  "homepage": "https://github.com/MCDiamondFire/Suggestion-Manager#readme",
   "dependencies": {
-    "discord.js": "^11.4.2",
-    "dotenv": "^6.2.0"
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^8.1.0",
+    "mongodb": "^3.2.7"
   },
   "devDependencies": {
-    "chalk": "^2.4.2",
-    "nodemon": "^1.18.9"
+    "@types/dotenv": "^6.1.1",
+    "@types/mongodb": "^3.3.2",
+    "@types/node": "^12.7.5",
+    "fast-glob": "^3.0.4",
+    "fs-extra": "^8.1.0",
+    "nodemon": "^1.19.2",
+    "source-map-support": "^0.5.13",
+    "typescript": "^3.6.3"
   }
 }

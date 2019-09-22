@@ -1,6 +1,0 @@
-{
-  "serverID": "<Server_ID>",
-  "suggestionChannels": ["<Channel_ID>"],
-  "suggestionChannelBot": "<Channel_ID>",
-  "votesNeeded": 20
-}
