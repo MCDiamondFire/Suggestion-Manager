@@ -59,10 +59,10 @@
     }
   },
   "625114464219299881": {
-    "publicMessage": "*{{user}}'s suggestion has been marked as already patched ({{emoji}}) by {{reacter}}.*",
+    "publicMessage": "*{{user}}'s issue has been marked as already patched ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Patched",
-      "description": "Your [suggestion]({{link}}) has been marked as patched by {{reacter_mention}}. This means that it has been fixed in a development build, and will appear on DiamondFire shortly.",
+      "description": "Your [issue]({{link}}) has been marked as patched by {{reacter_mention}}. This means that it has been fixed in a development build, and will appear on DiamondFire shortly.",
       "color": 4376407
     }
   }
