@@ -17,8 +17,6 @@ const {
 module.exports = async (packet: any) => {
   //* Check for messageReactionAdd
   if (packet && packet.t !== "MESSAGE_REACTION_ADD") return;
-  //* Return if bot
-  if (packet.d.user_id === client.user.id) return;
 
   //* Fetch channel & message
   const channel = client.channels.get(
