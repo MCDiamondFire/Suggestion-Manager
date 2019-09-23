@@ -46,9 +46,10 @@ module.exports = async (packet: any) => {
     .setColor(packet.d.emoji.id === emojis.accepted ? 5046122 : 16733011)
     .setDescription(`[Suggestion](${message.url}) marked as **${packet.d.emoji.id === emojis.accepted ? "accepted" : "denied"}** by <@${packet.d.user_id}>.`)
     .addField("\u200b", message.content.length > 128 ? message.content.substring(0, 125) + "..." : message.content || "*No message*")
-    .addField("» Net Votes", message.reactions.get(emojis.upvote).count - message.reactions.get(emojis.downvote).count, true)
+    .addField("» Net Votes", (message.reactions.get(emojis.upvote) || { count: 0 }).count - (message.reactions.get(emojis.downvote) || { count: 0 }).count, true)
     .addField("» Poster", message.author.toString(), true)
-    .setTimestamp()
+    .setFooter("Posted")
+    .setTimestamp(message.createdTimestamp)
   );
 
   //* Remove reaction if from message author
@@ -87,7 +88,7 @@ module.exports = async (packet: any) => {
           )
           .replace(/{{reacter_mention}}/g, `<@${packet.d.user_id}>`)
       )
-    });
+    }).catch(() => null);
   }
 
   //* Calculate net votes
@@ -105,7 +106,7 @@ module.exports = async (packet: any) => {
     message.author.send(new Discord.MessageEmbed()
       .setTitle("Suggestion Popular")
       .setDescription(`Your [suggestion](${message.url}) made it into popular suggestions!`)
-      .setColor(0x32ffaa));
+      .setColor(0x32ffaa)).catch(() => null);
 
     // Send to popular suggestions
     (client.channels.get(popularSuggestions) as Discord.TextChannel)
