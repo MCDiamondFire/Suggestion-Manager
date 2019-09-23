@@ -3,7 +3,7 @@
     "publicMessage": "*{{user}}'s suggestion has been marked as a duplicate ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Duplicate",
-      "description": "Your [suggestion]({{link}}) has been marked as a duplicate by {{reacter_mention}}. This means that you either marked it as a bump prematurely, or it has simply suggeted before.",
+      "description": "Your [suggestion]({{link}}) has been marked as a duplicate by {{reacter_mention}}. This means that you either marked it as a bump prematurely, or it has been suggested before.",
       "color": 16740163,
       "footer": {
         "text": "If you believe this was a mistake, please contact {{reacter}} either through private message, or on the suggestion Discord with a mention."
@@ -22,7 +22,7 @@
     "publicMessage": "*{{user}}'s suggestion has been marked as accepted ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Accepted",
-      "description": "Your [suggestion](<{{link}}>) as been accepted by {{reacter_mention}}! If nothing changes it will be in DiamondFire eventually.",
+      "description": "Your [suggestion](<{{link}}>) has been accepted by {{reacter_mention}}! If nothing changes it will be in DiamondFire eventually.",
       "color": 5046122
     }
   },
@@ -38,7 +38,7 @@
     "publicMessage": "*{{user}}'s suggestion has been marked as highest priority ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Highest Priority",
-      "description": "Your [suggestion](<{{link}}>) has ben marked as the highest priority by {{reacter_mention}}. This means it will likely be added in the next patch, or possibly a bit later. The developers are currently working on many things at once, so be patient!",
+      "description": "Your [suggestion](<{{link}}>) has been marked as highest priority by {{reacter_mention}}. This means it will likely be added in the next patch, or possibly a bit later. The developers are currently working on many things at once, so be patient!",
       "color": 16740419
     }
   },
@@ -46,7 +46,7 @@
     "publicMessage": "*{{user}}'s suggestion has been marked as medium priority ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Medium Priority",
-      "description": "Your [suggestion](<{{link}}>) has ben marked as the medium priority by {{reacter_mention}}. This means it will likely be added some time in the near future, but almost definitely not next patch. The devs are very busy, so be patient!",
+      "description": "Your [suggestion](<{{link}}>) has been marked as medium priority by {{reacter_mention}}. This means it will likely be added some time in the near future, but almost definitely not next patch. The developers are very busy, so be patient!",
       "color": 14244247
     }
   },
@@ -54,12 +54,12 @@
     "publicMessage": "*{{user}}'s suggestion has been marked as low priority ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Low Priority",
-      "description": "Your [suggestion](<{{link}}>) has ben marked as the low priority by {{reacter_mention}}. This means that it may get added, but definitely in the far future. Do not expect this to appear in the next patch, or even the one after. The developers are very busy, so changes take time!",
+      "description": "Your [suggestion](<{{link}}>) has been marked as low priority by {{reacter_mention}}. This means that it may get added, but definitely in the far future. Do not expect this to appear in the next patch, or even the one after. The developers are very busy, so changes take time!",
       "color": 7361535
     }
   },
   "625114464219299881": {
-    "publicMessage": "*{{user}}'s issue has been marked as already patched ({{emoji}}) by {{reacter}}.*",
+    "publicMessage": "*{{user}}'s issue has been marked as patched ({{emoji}}) by {{reacter}}.*",
     "embed": {
       "title": "{{emoji}} | Patched",
       "description": "Your [issue]({{link}}) has been marked as patched by {{reacter_mention}}. This means that it has been fixed in a development build, and will appear on DiamondFire shortly.",
