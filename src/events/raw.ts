@@ -5,7 +5,8 @@ const {
     required,
     emojis,
     popularSuggestions,
-    feed
+    feed,
+    reactedFeed
   } = require("../config.json"),
   messageData = require("../reactions.json"),
   suggestions = MongoClient.db("SuggestionManager").collection("Suggestions"),
@@ -14,17 +15,38 @@ const {
   );
 
 module.exports = async (packet: any) => {
-  if (packet.t !== "MESSAGE_REACTION_ADD") return;
+  //* Check for messageReactionAdd
+  if (packet && packet.t !== "MESSAGE_REACTION_ADD") return;
   //* Return if bot
   if (packet.d.user_id === client.user.id) return;
 
+  //* Fetch channel & message
   const channel = client.channels.get(
     packet.d.channel_id
   ) as Discord.TextChannel;
-  const message = (await channel.messages.fetch(
+  if (!channel) return;
+  const message = await channel.messages.fetch(
     packet.d.message_id
-    // @ts-ignore
-  )) as Discord.Message;
+  ) as Discord.Message;
+  if (!message) return;
+
+  if (packet.d.channel_id === popularSuggestions) {
+
+    return;
+  }
+
+  //* Log handled suggestions
+  if ([emojis.accepted, emojis.denied].includes(packet.d.emoji.id)) (client.channels.get(reactedFeed) as Discord.TextChannel).send(
+    new Discord.MessageEmbed()
+    .setAuthor(message.author.tag, message.author.avatarURL({ size: 128 }))
+    .setTitle(`<:${packet.d.emoji.name}:${packet.d.emoji.id}> | Suggestion Handled`)
+    .setColor(packet.d.emoji.id === emojis.accepted ? 5046122 : 16733011)
+    .setDescription(`[Suggestion](${message.url}) marked as **${packet.d.emoji.id === emojis.accepted ? "accepted" : "denied"}** by <@${packet.d.user_id}>.`)
+    .addField("\u200b", message.content.length > 128 ? message.content.substring(0, 125) + "..." : message.content)
+    .addField("» Net Votes", message.reactions.get(emojis.upvote).count - message.reactions.get(emojis.downvote).count, true)
+    .addField("» Poster", message.author.toString(), true)
+    .setTimestamp()
+  );
 
   //* Remove reaction if from message author
   // if (message.author.id === packet.d.user_id) {
@@ -65,17 +87,23 @@ module.exports = async (packet: any) => {
     });
   }
 
-  let upvote;
-  if (packet)
-    upvote = message.reactions.get(emojis.upvote) as Discord.MessageReaction;
-  const downvote = message.reactions.get(
-    emojis.downvote
-  ) as Discord.MessageReaction;
+  //* Calculate net votes
+  const upvote = message.reactions.get(emojis.upvote) as Discord.MessageReaction;
+  const downvote = message.reactions.get(emojis.downvote) as Discord.MessageReaction;
+  const net = upvote.count - downvote.count;
+  
+  //* Check if suggestion should be registered as popular
+  if (net >= required && !await handledSuggestions.findOne({ origMessage: message.id })) {
+    // Send to discussion
+    notifChannel.send(`*${message.member.displayName}'s suggestion has made it to popular suggestions!*`);
 
-  if (
-    upvote.count - 1 - (downvote.count - 1) >= required &&
-    !(await handledSuggestions.findOne({ origMessage: message.id }))
-  ) {
+    // Send to author
+    message.author.send(new Discord.MessageEmbed()
+      .setTitle("Suggestion Popular")
+      .setDescription(`Your [suggestion](${message.url}) made it into popular suggestions!`)
+      .setColor(0x32ffaa));
+
+    // Send to popular suggestions
     (client.channels.get(popularSuggestions) as Discord.TextChannel)
       .send(
         new Discord.MessageEmbed()
@@ -95,6 +123,7 @@ module.exports = async (packet: any) => {
           .setTimestamp(message.createdTimestamp)
       )
       .then(msg => {
+        // Insert into DB
         handledSuggestions.insertOne({ id: msg.id, origMessage: message.id });
       });
   }
