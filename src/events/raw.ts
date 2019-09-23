@@ -30,7 +30,12 @@ module.exports = async (packet: any) => {
   ) as Discord.Message;
   if (!message) return;
 
+  //* Mirror reactions from #popular-suggestions
   if (packet.d.channel_id === popularSuggestions) {
+    const data = message.embeds[0].description.split("https://discordapp.com/channels/")[1].replace(/\)/g, "").split("/").slice(1);
+    const channel = client.channels.get(data[0]) as Discord.TextChannel;
+    const msg = await channel.messages.fetch(data[1]);
+    msg.react(packet.d.emoji.id || packet.d.emoji.name).catch(e => null);
 
     return;
   }
@@ -42,7 +47,7 @@ module.exports = async (packet: any) => {
     .setTitle(`<:${packet.d.emoji.name}:${packet.d.emoji.id}> | Suggestion Handled`)
     .setColor(packet.d.emoji.id === emojis.accepted ? 5046122 : 16733011)
     .setDescription(`[Suggestion](${message.url}) marked as **${packet.d.emoji.id === emojis.accepted ? "accepted" : "denied"}** by <@${packet.d.user_id}>.`)
-    .addField("\u200b", message.content.length > 128 ? message.content.substring(0, 125) + "..." : message.content)
+    .addField("\u200b", message.content.length > 128 ? message.content.substring(0, 125) + "..." : message.content || "*No message*")
     .addField("» Net Votes", message.reactions.get(emojis.upvote).count - message.reactions.get(emojis.downvote).count, true)
     .addField("» Poster", message.author.toString(), true)
     .setTimestamp()
@@ -90,6 +95,7 @@ module.exports = async (packet: any) => {
   //* Calculate net votes
   const upvote = message.reactions.get(emojis.upvote) as Discord.MessageReaction;
   const downvote = message.reactions.get(emojis.downvote) as Discord.MessageReaction;
+  if (!upvote || !downvote) return;
   const net = upvote.count - downvote.count;
   
   //* Check if suggestion should be registered as popular
