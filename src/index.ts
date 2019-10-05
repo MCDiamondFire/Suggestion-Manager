@@ -9,6 +9,7 @@ import { connect } from "./database/client";
 //* Create new client & set login presence
 export var client = new Discord.Client({
   fetchAllMembers: true,
+  partials: ["MESSAGE"],
   presence:
     process.env.NODE_ENV == "dev"
       ? {
