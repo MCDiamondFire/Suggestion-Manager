@@ -1,4 +1,5 @@
 .gradle
 .idea
+gradle
 build
 /src/main/java/com/owen1212055/suggestionsbot/util/SensitiveData.java
