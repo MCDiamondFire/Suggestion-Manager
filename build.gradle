@@ -3,8 +3,8 @@ plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
-mainClassName = 'com.owen1212055.suggestionsbot.SuggestionsBot'
-group 'com.owen1212055.suggestionsbot'
+mainClassName = 'com.diamondfire.suggestionsbot.SuggestionsBot'
+group 'com.diamondfire.suggestionsbot'
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.owen1212055.suggestionsbot.SuggestionsBot'
+                'Main-Class': 'com.diamondfire.suggestionsbot.SuggestionsBot'
         )
     }
 }
