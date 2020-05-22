@@ -1,9 +1,4 @@
-node_modules
-dist
-
-src/package.json
-
-.vscode
-.env
-
-*.js
+.gradle
+.idea
+build
+/src/main/java/com/owen1212055/suggestionsbot/util/SensitiveData.java
