@@ -14,12 +14,12 @@ public class PopularHandler {
 
     public static void calculate() {
         try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT (SUM(upvotes) - SUM(downvotes)) / COUNT(*) as ratio FROM suggestions WHERE popular_message > 0 AND date > CURRENT_TIMESTAMP - INTERVAL 3 WEEK ORDER BY (upvotes - downvotes)  LIMIT 10;")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT (COUNT(*) * 0.5) AS ratio FROM suggestions WHERE popular_message > 0 AND date > CURRENT_TIMESTAMP - INTERVAL 3 WEEK ORDER BY (upvotes - downvotes) LIMIT 10;")) {
 
             ResultSet set = statement.executeQuery();
 
             if (set.next()) {
-                ratio = (int) Math.ceil(set.getInt("ratio"));
+                ratio = (int) Math.ceil(set.getInt("ratio")) + BotConstants.RATIO;
                 if (ratio < BotConstants.RATIO) {
                     ratio = BotConstants.RATIO;
                 }
