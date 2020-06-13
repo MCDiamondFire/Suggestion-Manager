@@ -7,7 +7,6 @@ import com.diamondfire.suggestionsbot.suggestions.reactions.flag.accept.OtherAcc
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.accept.Patched;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Denied;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Duplicate;
-import com.owen1212055.suggestionsbot.suggestions.reactions.misc.*;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -34,7 +33,9 @@ public class ReactionHandler {
                 new NotDF(),
                 new PriorityMax(),
                 new PriorityMid(),
-                new PriorityMin()
+                new PriorityMin(),
+
+                new ConfirmedIssue()
 
         );
 

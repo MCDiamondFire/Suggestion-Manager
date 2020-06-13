@@ -22,7 +22,6 @@ public class PopularCommand extends AbstractSuggestionCommand {
         return Permission.MOD;
     }
 
-
     @Override
     public void run(CommandEvent event, Suggestion suggestion) {
         suggestion.referenceManager.newReference(new PopularReference());

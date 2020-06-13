@@ -1,12 +1,13 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
+import com.diamondfire.suggestionsbot.database.ConnectionProvider;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.util.ConnectionProvider;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.sql.*;
 import java.util.stream.Collectors;
 
+//TODO Migrate to the new query system
 public class DatabaseManager {
     private final Suggestion suggestion;
 

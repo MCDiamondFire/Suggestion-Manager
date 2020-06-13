@@ -1,18 +1,20 @@
 package com.diamondfire.suggestionsbot.command.arguments;
 
+
 public class NoArg extends Argument {
+
+
+    public NoArg() {
+        super("", false);
+    }
+
     @Override
-    public boolean validate(String args) {
+    public boolean validate(String msg) {
         return true;
     }
 
     @Override
     public String failMessage() {
-        return "If you are seeing this message, you screwed something up lol.";
-    }
-
-    @Override
-    public String toString() {
-        return "";
+        return null;
     }
 }

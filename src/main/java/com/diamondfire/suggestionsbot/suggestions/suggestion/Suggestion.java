@@ -1,11 +1,11 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
 
+import com.diamondfire.suggestionsbot.database.ConnectionProvider;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.channels.Channel;
 import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.ReferenceManager;
-import com.diamondfire.suggestionsbot.util.ConnectionProvider;
+import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.ReferenceManager;;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.sql.Connection;
