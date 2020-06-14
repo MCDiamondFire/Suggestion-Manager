@@ -2,6 +2,7 @@ package com.diamondfire.suggestionsbot.events;
 
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.command.permissions.PermissionHandler;
+import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.util.Util;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
@@ -46,7 +47,7 @@ public class ReactionEvent extends ListenerAdapter {
         Suggestion suggestion = Suggestion.deepFind(message);
 
         // If we cannot find the suggestion, assume it is a legacy suggestion and try to add it.
-        if (suggestion == null) {
+        if (suggestion == null && ChannelHandler.isValidChannel(message.getChannel().getIdLong())) {
             Suggestion legacySuggestion = new Suggestion(message);
             legacySuggestion.databaseManager.addToDatabase();
             return;
