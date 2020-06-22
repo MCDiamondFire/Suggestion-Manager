@@ -1,20 +1,20 @@
-package com.diamondfire.suggestionsbot.command.commands;
+package com.diamondfire.suggestionsbot.command.impl;
 
 
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
 
-public class InfoCommand extends AbstractSuggestionCommand {
+public class PopularCommand extends AbstractSuggestionCommand {
     @Override
     public String getName() {
-        return "info";
+        return "popular";
     }
 
     @Override
     public String getDescription() {
-        return "Gets stats on a specific message";
+        return "Forces a message to become popular.";
     }
 
     @Override
@@ -24,9 +24,6 @@ public class InfoCommand extends AbstractSuggestionCommand {
 
     @Override
     public void run(CommandEvent event, Suggestion suggestion) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("References: ", String.join("\n", suggestion.referenceManager.getReferences().keySet()), true);
-
-        event.getChannel().sendMessage(builder.build()).queue();
+        suggestion.referenceManager.newReference(new PopularReference());
     }
 }

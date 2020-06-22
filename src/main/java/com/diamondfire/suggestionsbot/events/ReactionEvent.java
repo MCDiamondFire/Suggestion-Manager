@@ -69,15 +69,11 @@ public class ReactionEvent extends ListenerAdapter {
                 ReactionFlag flag = (ReactionFlag) reaction;
                 if (ReactionHandler.isFirst(message, reactionEmote.getEmote())) {
                     String channelName = suggestion.getChannel().getName();
-
                     EmbedBuilder builder = new EmbedBuilder();
-
                     builder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
                     builder.setTitle(reactionEmote.getEmote().getAsMention() + " **|** " + String.format("%s %s", channelName, flag.getEmbedName()));
                     builder.setDescription(String.format("[%s](%s) posted by %s was %s by %s.\n", channelName, suggestionMSG.getJumpUrl(), suggestionMSG.getAuthor().getAsMention(), flag.getEmbedName().toLowerCase(), user.getAsMention()));
-
                     builder.setColor(flag.getColor());
-
                     builder.addField("\u200b", Util.trim(suggestionMSG.getContentRaw(), 256), false);
 
                     BotInstance.getJda().getTextChannelById(BotConstants.REACTION_LOG).sendMessage(builder.build()).queue();
@@ -90,8 +86,8 @@ public class ReactionEvent extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionRemove(@Nonnull GuildMessageReactionRemoveEvent event) {
         MessageReaction.ReactionEmote reactionEmote = event.getReactionEmote();
-
         Member member = event.getGuild().retrieveMemberById(event.getUserId()).complete();
+
         if (!member.getUser().isBot() && !reactionEmote.isEmote()) return;
 
         Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();

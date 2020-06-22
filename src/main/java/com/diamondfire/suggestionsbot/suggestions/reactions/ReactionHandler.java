@@ -9,7 +9,10 @@ import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Denied;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Duplicate;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +33,7 @@ public class ReactionHandler {
 
                 new Discussion(),
                 new Impossible(),
+                new Possible(),
                 new NotDF(),
                 new PriorityMax(),
                 new PriorityMid(),
@@ -59,11 +63,21 @@ public class ReactionHandler {
     }
 
     public static List<Reaction> getReactions(Message message) {
-        return message.getReactions().stream()
-                .filter((reaction -> reaction.getReactionEmote().isEmote()))
-                .map((reaction) -> ReactionHandler.getReaction(reaction.getReactionEmote().getIdLong()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        List<Reaction> reactions = new ArrayList<>();
+
+        for (MessageReaction reaction : message.getReactions()) {
+            MessageReaction.ReactionEmote emote = reaction.getReactionEmote();
+            if (emote.isEmote()) {
+                System.out.println(emote);
+               Reaction sugReaction = ReactionHandler.getReaction(emote.getIdLong());
+               if (sugReaction != null) {
+                   System.out.println(sugReaction);
+                   reactions.add(sugReaction);
+               }
+            }
+        }
+
+        return reactions;
     }
 
     public static boolean isFirst(Message message, Emote emote) {

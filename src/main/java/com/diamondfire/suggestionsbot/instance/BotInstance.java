@@ -2,7 +2,7 @@ package com.diamondfire.suggestionsbot.instance;
 
 
 import com.diamondfire.suggestionsbot.command.CommandHandler;
-import com.diamondfire.suggestionsbot.command.commands.*;
+import com.diamondfire.suggestionsbot.command.impl.*;
 import com.diamondfire.suggestionsbot.events.MessageEvent;
 import com.diamondfire.suggestionsbot.events.PrivateMessageEvent;
 import com.diamondfire.suggestionsbot.events.ReactionEvent;
@@ -23,7 +23,8 @@ public class BotInstance {
                 new StatsCommand(),
                 new RefreshCommand(),
                 new InfoCommand(),
-                new PopularCommand()
+                new PopularCommand(),
+                new EvalCommand()
         );
 
         JDABuilder builder = JDABuilder.createDefault(BotConstants.TOKEN);

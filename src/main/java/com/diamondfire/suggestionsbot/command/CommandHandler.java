@@ -1,7 +1,7 @@
 package com.diamondfire.suggestionsbot.command;
 
 
-import com.diamondfire.suggestionsbot.command.commands.Command;
+import com.diamondfire.suggestionsbot.command.impl.Command;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
