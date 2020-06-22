@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.command.commands;
+package com.diamondfire.suggestionsbot.command.impl;
 
 
 import com.diamondfire.suggestionsbot.command.permissions.Permission;

@@ -69,7 +69,7 @@ public class DatabaseManager {
     //TODO Instead of fetching each reference individually, do it all at once.
     public long getReference(String tableName) {
         try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM suggestions WHERE message = ?;")) {
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM suggestions WHERE message = ?;")) {
 
             statement.setLong(1, suggestion.getSuggestion().getIdLong());
             statement.execute();
@@ -94,6 +94,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
 
         return 0;
     }

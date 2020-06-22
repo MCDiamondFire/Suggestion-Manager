@@ -1,5 +1,6 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference;
 
+import com.diamondfire.suggestionsbot.suggestions.suggestion.ReactionManager;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
@@ -35,31 +36,35 @@ public abstract class Reference {
     public abstract MessageEmbed create(Suggestion suggestion);
 
     public void refresh(Suggestion suggestion) {
-        if (syncEmojis()) {
-            List<Reaction> referenceReactions = new ArrayList<>(ReactionHandler.getReactions(getReference()));
-            List<Reaction> suggestionReactions = suggestion.reactionManager.getReactions();
+            Message suggestionMessage = suggestion.getSuggestion();
+            suggestionMessage.getChannel().retrieveMessageById(suggestionMessage.getIdLong()).queue((msg) -> {
+                suggestion.setSuggestion(msg);
+                suggestion.reactionManager = new ReactionManager(suggestion);
 
-            for (Reaction reaction : referenceReactions) {
-                if (!suggestionReactions.contains(reaction)) {
-                    suggestion.getSuggestion().addReaction(reaction.getEmote()).complete();
-                }
-            }
-            for (Reaction reaction : suggestionReactions) {
-                if (!referenceReactions.contains(reaction)) {
-                    getReference().addReaction(reaction.getEmote()).complete();
-                }
-            }
+                if (syncEmojis()) {
+                    List<Reaction> referenceReactions = new ArrayList<>(ReactionHandler.getReactions(getReference()));
+                    List<Reaction> suggestionReactions = suggestion.reactionManager.getReactions();
 
-        }
-        suggestion.refreshMessage();
-        getReference().editMessage(create(suggestion)).queue();
+                    for (Reaction reaction : referenceReactions) {
+                        if (!suggestionReactions.contains(reaction)) {
+                            suggestion.getSuggestion().addReaction(reaction.getEmote()).queue();
+                        }
+                    }
+                    for (Reaction reaction : suggestionReactions) {
+                        if (!referenceReactions.contains(reaction)) {
+                            getReference().addReaction(reaction.getEmote()).queue();
+                        }
+                    }
+
+                }
+                getReference().editMessage(create(suggestion)).queue();
+            });
+
 
     }
 
     //Had to implement this because of reaction problems.
     public void plainRefresh(Suggestion suggestion) {
-
-        suggestion.refreshMessage();
         getReference().editMessage(create(suggestion)).queue();
 
     }

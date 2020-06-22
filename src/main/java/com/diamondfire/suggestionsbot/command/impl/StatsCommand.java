@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.command.commands;
+package com.diamondfire.suggestionsbot.command.impl;
 
 
 import com.diamondfire.suggestionsbot.command.arguments.value.LongArg;
@@ -12,10 +12,6 @@ import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

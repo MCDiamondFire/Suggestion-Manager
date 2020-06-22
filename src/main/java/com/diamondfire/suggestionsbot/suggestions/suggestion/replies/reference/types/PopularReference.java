@@ -9,6 +9,7 @@ import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -40,14 +41,21 @@ public class PopularReference extends Reference {
     @Override
     public MessageEmbed create(Suggestion suggestion) {
         PopularHandler.calculate();
-
         Message message = suggestion.getSuggestion();
-
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setAuthor(message.getAuthor().getName(), null, message.getAuthor().getEffectiveAvatarUrl());
+        ReactionManager manager = suggestion.reactionManager;
+        Reaction reaction = manager.getTopReaction();
+        Member member = message.getGuild().getMember(message.getAuthor());
+        String memberName;
+        if (member == null) {
+            memberName = message.getAuthor().getName();
+        } else {
+            memberName = member.getEffectiveName();
+        }
 
         StringBuilder description = new StringBuilder();
         description.append(String.format("\uD83D\uDCE8 Jump to [%s](" + message.getJumpUrl() + ")", suggestion.getChannel().getName()));
+
         //TODO Fix issue where if the popular message isn't there, it doesn't correctly fetches the discussion message.
         // The reason for this, is quite simple.
         if (suggestion.referenceManager != null) {
@@ -59,18 +67,9 @@ public class PopularReference extends Reference {
 
         builder.setDescription(description.toString());
         builder.addField("\u200b", Util.trim(message.getContentRaw(), 256), false);
-
-
-        ReactionManager manager = suggestion.reactionManager;
-
-        Reaction reaction = manager.getTopReaction();
-        Color color = reaction != null ? reaction.getColor() : Color.gray;
-
-        builder.setColor(color);
-
-
+        builder.setAuthor(memberName, null, message.getAuthor().getEffectiveAvatarUrl());
+        builder.setColor(reaction != null ? reaction.getColor() : Color.gray);
         builder.setFooter("+" + manager.getNetVotes() + " (" + manager.getUpVotes() + "|" + manager.getDownVotes() + ")");
-
         return builder.build();
 
     }

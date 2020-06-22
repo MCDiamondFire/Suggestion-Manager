@@ -2,7 +2,7 @@ package com.diamondfire.suggestionsbot.instance;
 
 
 import com.diamondfire.suggestionsbot.command.CommandHandler;
-import com.diamondfire.suggestionsbot.command.commands.*;
+import com.diamondfire.suggestionsbot.command.impl.*;
 import com.diamondfire.suggestionsbot.events.MessageEvent;
 import com.diamondfire.suggestionsbot.events.PrivateMessageEvent;
 import com.diamondfire.suggestionsbot.events.ReactionEvent;
@@ -10,6 +10,7 @@ import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 
 import javax.security.auth.login.LoginException;
 
@@ -23,7 +24,8 @@ public class BotInstance {
                 new StatsCommand(),
                 new RefreshCommand(),
                 new InfoCommand(),
-                new PopularCommand()
+                new PopularCommand(),
+                new EvalCommand()
         );
 
         JDABuilder builder = JDABuilder.createDefault(BotConstants.TOKEN);
@@ -32,6 +34,7 @@ public class BotInstance {
 
         jda = builder.build();
         jda.awaitReady();
+
     }
 
     public static JDA getJda() {

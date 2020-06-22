@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.command.commands;
+package com.diamondfire.suggestionsbot.command.impl;
 
 
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
@@ -24,9 +24,10 @@ public class InfoCommand extends AbstractSuggestionCommand {
 
     @Override
     public void run(CommandEvent event, Suggestion suggestion) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("References: ", String.join("\n", suggestion.referenceManager.getReferences().keySet()), true);
+            EmbedBuilder builder = new EmbedBuilder();
+            System.out.println(suggestion.referenceManager.getReferences().size());
+            builder.addField("References: ", String.join("\n", suggestion.referenceManager.getReferences().keySet()), true);
+            event.getChannel().sendMessage(builder.build()).queue();
 
-        event.getChannel().sendMessage(builder.build()).queue();
     }
 }

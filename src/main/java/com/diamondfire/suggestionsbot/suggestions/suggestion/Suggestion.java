@@ -68,6 +68,10 @@ public class Suggestion {
         return suggestion;
     }
 
+    public void setSuggestion(Message suggestion) {
+        this.suggestion = suggestion;
+    }
+
     public Channel getChannel() {
         return channel;
     }
@@ -76,9 +80,4 @@ public class Suggestion {
         return databaseManager.exists();
     }
 
-
-    public void refreshMessage() {
-        suggestion = suggestion.getChannel().retrieveMessageById(suggestion.getIdLong()).complete();
-        reactionManager = new ReactionManager(this);
-    }
 }

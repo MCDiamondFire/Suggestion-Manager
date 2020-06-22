@@ -4,7 +4,7 @@ public interface BotConstants {
 
     String TOKEN = SensitiveData.TOKEN;
 
-    String PREFIX = "?";
+    String PREFIX = "&";
 
     // The ratio cannot go lower than this.
     int RATIO = 18;
