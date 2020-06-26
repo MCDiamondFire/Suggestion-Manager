@@ -68,7 +68,6 @@ public class ReactionHandler {
         for (MessageReaction reaction : message.getReactions()) {
             MessageReaction.ReactionEmote emote = reaction.getReactionEmote();
             if (emote.isEmote()) {
-                System.out.println(emote);
                Reaction sugReaction = ReactionHandler.getReaction(emote.getIdLong());
                if (sugReaction != null) {
                    System.out.println(sugReaction);
