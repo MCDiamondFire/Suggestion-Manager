@@ -30,7 +30,7 @@ public class PrivateMessageEvent extends ListenerAdapter {
         sentMSG.setTitle("Thank you for your report!");
         sentMSG.setDescription("You have successfully reported your message as a **dangerous issue**. If this was a mistake, please make sure to notify us in <#528932649394241536>.");
         sentMSG.setColor(Color.GREEN);
-        event.getChannel().sendMessage(sentMSG.build());
+        event.getChannel().sendMessage(sentMSG.build()).queue();
 
         EmbedBuilder builderIssue = new EmbedBuilder();
         builderIssue.setDescription(event.getMessage().getContentRaw());
