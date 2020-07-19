@@ -21,10 +21,10 @@ public class BotInstance {
         handler.register(
                 new HelpCommand(),
                 new StatsCommand(),
-                new RefreshCommand(),
                 new InfoCommand(),
                 new PopularCommand(),
-                new EvalCommand()
+                new EvalCommand(),
+                new CloneCommand()
         );
 
         JDABuilder builder = JDABuilder.createDefault(BotConstants.TOKEN);

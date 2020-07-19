@@ -13,7 +13,7 @@ public class PriorityMid extends Reaction {
 
     @Override
     public String getIdentifier() {
-        return "pri_min";
+        return "pri_mid";
     }
 
     @Override

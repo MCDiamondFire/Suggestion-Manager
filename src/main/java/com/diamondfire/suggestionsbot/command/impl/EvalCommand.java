@@ -1,17 +1,16 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-import com.diamondfire.suggestionsbot.command.arguments.Argument;
-import com.diamondfire.suggestionsbot.command.arguments.value.StringArg;
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.argument.impl.types.MessageArgument;
+import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import javax.script.*;
 import java.awt.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 
 
 public class EvalCommand extends Command {
@@ -22,13 +21,18 @@ public class EvalCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Executes given code.";
+    public HelpContext getHelpContext() {
+        return new HelpContext()
+                .description("Executes given code.")
+                .addArgument(
+                        new HelpContextArgument()
+                                .name("Code")
+                );
     }
 
     @Override
-    public Argument getArgument() {
-        return new StringArg("Code", true);
+    public ArgumentSet getArguments() {
+        return new ArgumentSet().addArgument("code", new MessageArgument());
     }
 
     @Override
@@ -48,14 +52,13 @@ public class EvalCommand extends Command {
             event.getChannel().sendMessage(builder.build()).queue();
             return;
         }
-
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
-
         engine.put("jda", event.getJDA());
         engine.put("event", event);
 
+        String code = event.getArgument("code");
+        code = code.replaceAll("([^(]+?)\\s*->", "function($1)");
 
-        String code = event.getParsedArgs().replaceAll("([^(]+?)\\s*->", "function($1)");
         EmbedBuilder builder = new EmbedBuilder();
         builder.addField("Code", String.format("```js\n%s```", code), true);
 

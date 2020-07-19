@@ -1,8 +1,9 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.arguments.value.LongArg;
-import com.diamondfire.suggestionsbot.command.arguments.value.ValueArgument;
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
+import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
@@ -25,13 +26,19 @@ public class StatsCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Gets stats on a specific user";
+    public HelpContext getHelpContext() {
+        return new HelpContext()
+                .description("Gets stats on a specific user")
+                .addArgument(new HelpContextArgument()
+                        .name("User ID")
+                        .optional()
+                );
     }
 
     @Override
-    public ValueArgument<Long> getArgument() {
-        return new LongArg("User ID", false);
+    public ArgumentSet getArguments() {
+        return new ArgumentSet().addArgument("user",
+                new LongArgument().optional(null));
     }
 
     @Override
@@ -42,17 +49,15 @@ public class StatsCommand extends Command {
     @Override
     public void run(CommandEvent event) {
         EmbedBuilder builder = new EmbedBuilder();
-        long id = 0;
-        if (event.getParsedArgs().isEmpty()) {
+        final long id;
+        if (event.getArgument("user") == null) {
             id = event.getAuthor().getIdLong();
         } else {
-            id = getArgument().getArg(event.getParsedArgs());
+            id = event.getArgument("user");
         }
 
-
-        long finalId = id;
         new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", (statement -> {
-            statement.setLong(1, finalId);
+            statement.setLong(1, id);
         })).onQuery((table) -> {
             int suggestionCount = 0;
             int upVotes = 0;
@@ -83,7 +88,7 @@ public class StatsCommand extends Command {
             }
             builder.setTitle("Stats:");
 
-            User user = BotInstance.getJda().retrieveUserById(finalId).complete();
+            User user = BotInstance.getJda().retrieveUserById(id).complete();
             builder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
             String[] stats = new String[]{
                     "Total Suggestions: " + suggestionCount,

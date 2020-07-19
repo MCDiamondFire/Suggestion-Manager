@@ -20,9 +20,12 @@ public class MessageEvent extends ListenerAdapter {
         long channelID = event.getChannel().getIdLong();
 
         if (message.getContentDisplay().startsWith(BotConstants.PREFIX)) {
-            CommandEvent commandEvent = new CommandEvent(event.getJDA(), event.getResponseNumber(), message);
-            BotInstance.getHandler().run(commandEvent);
-            return;
+            try {
+                CommandEvent commandEvent = new CommandEvent(event.getJDA(), event.getResponseNumber(), event.getMessage());
+                BotInstance.getHandler().run(commandEvent);
+                return;
+            } catch (IllegalArgumentException ignored) {
+            }
         }
 
         if (ChannelHandler.isValidChannel(channelID)) {

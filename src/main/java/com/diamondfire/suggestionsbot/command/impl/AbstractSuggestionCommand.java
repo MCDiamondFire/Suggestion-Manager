@@ -1,8 +1,9 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.arguments.value.LongArg;
-import com.diamondfire.suggestionsbot.command.arguments.value.ValueArgument;
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
+
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
@@ -10,14 +11,16 @@ import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public abstract class AbstractSuggestionCommand extends Command {
+
     @Override
-    public ValueArgument<Long> getArgument() {
-        return new LongArg("Suggestion ID", true);
+    public ArgumentSet getArguments() {
+        return new ArgumentSet().addArgument("msg",
+                new LongArgument());
     }
 
     @Override
     public void run(CommandEvent event) {
-        long messageID = getArgument().getArg(event.getParsedArgs());
+        long messageID = event.getArgument("msg");
         new SingleQueryBuilder().query("SELECT * from suggestions WHERE message = ?", (statement) -> {
             statement.setLong(1, messageID);
         }).onQuery((set) -> {

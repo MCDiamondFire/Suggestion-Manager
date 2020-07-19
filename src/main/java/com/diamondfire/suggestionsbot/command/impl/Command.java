@@ -1,22 +1,24 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.arguments.Argument;
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 
 public abstract class Command {
+
     public abstract String getName();
 
-    public abstract String getDescription();
+    public String[] getAliases() {
+        return new String[0];
+    }
 
-    public abstract Argument getArgument();
+    public abstract HelpContext getHelpContext();
+
+    public abstract ArgumentSet getArguments();
 
     public abstract Permission getPermission();
-
-    protected boolean inHelp() {
-        return true;
-    }
 
     public abstract void run(CommandEvent event);
 }

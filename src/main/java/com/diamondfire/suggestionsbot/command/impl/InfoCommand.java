@@ -1,6 +1,8 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
@@ -13,8 +15,12 @@ public class InfoCommand extends AbstractSuggestionCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Gets stats on a specific message";
+    public HelpContext getHelpContext() {
+        return new HelpContext()
+                .description("Gets current open references to a specific message.")
+                .addArgument(new HelpContextArgument()
+                        .name("Suggestion Msg ID")
+                );
     }
 
     @Override

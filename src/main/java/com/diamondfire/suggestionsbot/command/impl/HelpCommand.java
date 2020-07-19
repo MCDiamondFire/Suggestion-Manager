@@ -1,13 +1,15 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-import com.diamondfire.suggestionsbot.command.arguments.Argument;
-import com.diamondfire.suggestionsbot.command.arguments.NoArg;
+import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.command.permissions.PermissionHandler;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.util.stream.Collectors;
 
 
 public class HelpCommand extends Command {
@@ -18,13 +20,14 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Shows all commands";
+    public HelpContext getHelpContext() {
+        return new HelpContext()
+                .description("Lists all available commands.");
     }
 
     @Override
-    public Argument getArgument() {
-        return new NoArg();
+    public ArgumentSet getArguments() {
+        return new ArgumentSet();
     }
 
     @Override
@@ -40,13 +43,18 @@ public class HelpCommand extends Command {
         builder.setFooter("Your permissions: " + PermissionHandler.getPermission(event.getMember()));
 
         BotInstance.getHandler().getCommands().values().stream()
-                .filter(Command::inHelp)
                 .filter((command) -> command.getPermission().hasPermission(event.getMember()))
-                .forEach(command -> builder.addField(BotConstants.PREFIX + command.getName() + " " + command.getArgument().getName(), command.getDescription(), false));
+                .forEach(command -> builder.addField(BotConstants.PREFIX + command.getName() + " " + generateArguments(command.getHelpContext()), command.getHelpContext().getDescription(), false));
 
         event.getChannel().sendMessage(builder.build()).queue();
 
 
+    }
+
+    private String generateArguments(HelpContext context) {
+        return context.getArguments().stream()
+                .map(argument -> argument.isOptional() ? String.format("[<%s>] ", argument.getArgumentName()) : String.format("<%s> ", argument.getArgumentName()))
+                .collect(Collectors.joining());
     }
 
 }
