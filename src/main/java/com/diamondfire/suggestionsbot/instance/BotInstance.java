@@ -24,7 +24,8 @@ public class BotInstance {
                 new InfoCommand(),
                 new PopularCommand(),
                 new EvalCommand(),
-                new CloneCommand()
+                new CloneCommand(),
+                new WhenCommand()
         );
 
         JDABuilder builder = JDABuilder.createDefault(BotConstants.TOKEN);
