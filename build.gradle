@@ -8,13 +8,16 @@ group 'com.diamondfire.suggestionsbot'
 
 repositories {
     mavenCentral()
-    jcenter()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
     maven { url 'https://jitpack.io' }
 
 }
 
 dependencies {
-    compile ('net.dv8tion:JDA:4.1.1_127') {
+    compile ('net.dv8tion:JDA:4.2.0_251') {
         exclude module: 'opus-java'
     }
     compile 'ch.qos.logback:logback-classic:1.2.3'

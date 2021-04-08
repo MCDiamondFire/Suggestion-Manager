@@ -35,9 +35,7 @@ public class ReactionHandler {
                 new Impossible(),
                 new Possible(),
                 new NotDF(),
-                new PriorityMax(),
-                new PriorityMid(),
-                new PriorityMin(),
+
 
                 new ConfirmedIssue()
 
@@ -70,7 +68,6 @@ public class ReactionHandler {
             if (emote.isEmote()) {
                Reaction sugReaction = ReactionHandler.getReaction(emote.getIdLong());
                if (sugReaction != null) {
-                   System.out.println(sugReaction);
                    reactions.add(sugReaction);
                }
             }

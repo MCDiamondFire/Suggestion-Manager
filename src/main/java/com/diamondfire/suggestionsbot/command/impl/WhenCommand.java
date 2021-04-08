@@ -16,7 +16,7 @@ public class WhenCommand extends Command {
     @Override
     public HelpContext getHelpContext() {
         return new HelpContext()
-                .description("When is my suggestion coming?")
+                .description("When is my suggestion coming?");
     }
 
     @Override
