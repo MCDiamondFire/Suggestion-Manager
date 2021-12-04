@@ -1,12 +1,11 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
+import com.diamondfire.suggestionsbot.command.permissions.Permissions;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class PopularCommand extends AbstractSuggestionCommand {
     @Override
@@ -15,21 +14,17 @@ public class PopularCommand extends AbstractSuggestionCommand {
     }
 
     @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Forces a message to become popular.")
-                .addArgument(new HelpContextArgument()
-                        .name("Suggestion Msg ID")
-                );
+    public String getDescription() {
+        return "Forces a suggestion to become popular.";
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.MOD;
+        return Permissions.MODERATOR;
     }
 
     @Override
-    public void run(CommandEvent event, Suggestion suggestion) {
+    public void run(SlashCommandEvent event, Suggestion suggestion) {
         suggestion.referenceManager.newReference(new PopularReference());
     }
 }

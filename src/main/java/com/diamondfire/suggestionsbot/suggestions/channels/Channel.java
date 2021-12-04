@@ -6,7 +6,7 @@ import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.t
 import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -33,7 +33,7 @@ public abstract class Channel {
 
     }
 
-    public void onSuggestionReaction(Suggestion suggestion, GuildMessageReactionAddEvent event) {
+    public void onSuggestionReaction(Suggestion suggestion, MessageReactionAddEvent event) {
         Message message = suggestion.getSuggestion();
 
         LocalDate currentDate = LocalDate.now();

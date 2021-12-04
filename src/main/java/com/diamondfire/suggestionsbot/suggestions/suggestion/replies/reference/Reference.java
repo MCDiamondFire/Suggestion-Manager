@@ -52,7 +52,7 @@ public abstract class Reference {
 
         }
         suggestion.refreshMessage();
-        getReference().editMessage(create(suggestion)).queue();
+        getReference().editMessageEmbeds(create(suggestion)).queue();
 
     }
 
@@ -60,7 +60,7 @@ public abstract class Reference {
     public void plainRefresh(Suggestion suggestion) {
 
         suggestion.refreshMessage();
-        getReference().editMessage(create(suggestion)).queue();
+        getReference().editMessageEmbeds(create(suggestion)).queue();
 
     }
 }

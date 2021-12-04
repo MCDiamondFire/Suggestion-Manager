@@ -1,15 +1,14 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types;
 
+import com.diamondfire.suggestionsbot.SuggestionsBot;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import java.awt.*;
 
@@ -22,7 +21,7 @@ public class DiscussionReference extends Reference {
 
     @Override
     public long getChannelID() {
-        return BotConstants.DISCUSSION;
+        return SuggestionsBot.config.DISCUSSION;
     }
 
     @Override

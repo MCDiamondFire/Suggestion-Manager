@@ -1,24 +1,24 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
+import com.diamondfire.suggestionsbot.command.permissions.Permissions;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-public class StatsCommand extends Command {
+public class StatsCommand extends BotCommand {
 
     @Override
     public String getName() {
@@ -26,35 +26,25 @@ public class StatsCommand extends Command {
     }
 
     @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Gets stats on a specific user")
-                .addArgument(new HelpContextArgument()
-                        .name("User ID")
-                        .optional()
-                );
+    public String getDescription() {
+        return "Gets stats on a specific user";
     }
 
     @Override
-    public ArgumentSet getArguments() {
-        return new ArgumentSet().addArgument("user",
-                new LongArgument().optional(null));
+    public CommandData createCommand() {
+        return new CommandData(getName(), getDescription())
+                .addOption(OptionType.USER, "user", "User to check stats for", true);
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.USER;
+        return Permissions.USER;
     }
 
     @Override
-    public void run(CommandEvent event) {
+    public void run(SlashCommandEvent event) {
         EmbedBuilder builder = new EmbedBuilder();
-        final long id;
-        if (event.getArgument("user") == null) {
-            id = event.getAuthor().getIdLong();
-        } else {
-            id = event.getArgument("user");
-        }
+        final long id = event.getOption("user").getAsUser().getIdLong();
 
         new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", (statement -> {
             statement.setLong(1, id);
@@ -107,7 +97,7 @@ public class StatsCommand extends Command {
             builder.setTitle("Player not found!");
         }).execute();
 
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.replyEmbeds(builder.build()).queue();
 
 
     }

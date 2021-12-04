@@ -1,9 +1,9 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
+import com.diamondfire.suggestionsbot.SuggestionsBot;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.ReactionFlag;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.entities.MessageReaction;
 
 import java.util.Comparator;
@@ -23,13 +23,13 @@ public class ReactionManager {
                 .collect(Collectors.toList());
 
         downVotes = reactions.stream()
-                .filter(reaction -> reaction.getReactionEmote().getIdLong() == BotConstants.DOWNVOTE)
+                .filter(reaction -> reaction.getReactionEmote().getIdLong() == SuggestionsBot.config.DOWNVOTE)
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;
 
         upVotes = reactions.stream()
-                .filter(reaction -> reaction.getReactionEmote().getIdLong() == BotConstants.UPVOTE)
+                .filter(reaction -> reaction.getReactionEmote().getIdLong() == SuggestionsBot.config.UPVOTE)
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;

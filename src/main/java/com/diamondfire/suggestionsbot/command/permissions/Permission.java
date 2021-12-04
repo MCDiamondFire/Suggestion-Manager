@@ -1,46 +1,51 @@
 package com.diamondfire.suggestionsbot.command.permissions;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 
-import java.util.HashMap;
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.Objects;
 
-public enum Permission {
-    DEVELOPER(526182228229619713L, 999),
-    MOD(528943220235960321L, 999),
-    USER(0L, 1);
+public class Permission {
+    public final int index;
+    public final String name;
+    public final Long role;
 
-    private static final HashMap<Long, Permission> quickMap = new HashMap<>();
-
-    static {
-        Stream.of(values()).forEach(permissions -> quickMap.put(permissions.getRole(), permissions));
+    Permission(String name, int index, Long role) {
+        this.name = name;
+        this.index = index;
+        this.role = role;
     }
 
-    private final long role;
-    private final int permissionLevel;
-
-    Permission(long roleID, int permissionLevel) {
-        this.role = roleID;
-        this.permissionLevel = permissionLevel;
+    @Override
+    public int hashCode() {
+        return Objects.hash(index, name, role);
     }
 
-    public static Permission fromRole(long roleID) {
-        Permission perm = quickMap.get(roleID);
-        if (perm == null) {
-            return USER;
-        }
-        return perm;
+    public boolean matches(Member member) {
+        return member.getRoles().contains(member.getGuild().getRoleById(getRole()));
     }
-
-    public long getRole() {
-        return role;
-    }
-
     public int getPermissionLevel() {
-        return permissionLevel;
+        return this.index;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Long getRole() {
+        return this.role;
+    }
+
+    public static boolean isPrivileged(Permission permission) {
+        return permission.getRole() == null;
     }
 
     public boolean hasPermission(Member member) {
-        return getPermissionLevel() <= PermissionHandler.getPermission(member).getPermissionLevel();
+        return hasPermission(PermissionHandler.getPermission(member));
+    }
+
+    public boolean hasPermission(Permission permission) {
+        return getPermissionLevel() <= permission.getPermissionLevel();
     }
 }

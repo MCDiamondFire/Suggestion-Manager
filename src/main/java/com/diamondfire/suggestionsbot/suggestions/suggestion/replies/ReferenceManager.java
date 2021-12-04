@@ -33,7 +33,7 @@ public class ReferenceManager {
 
         TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelID());
 
-        channel.sendMessage(reference.create(suggestion)).queue((message) -> {
+        channel.sendMessageEmbeds(reference.create(suggestion)).queue((message) -> {
             // Set the reference to the newly defined message.
             reference.setReference(message);
             references.put(reference.getName(), reference);

@@ -1,5 +1,7 @@
 package com.diamondfire.suggestionsbot.suggestions.channels.channel.suggestion;
 
+import com.diamondfire.suggestionsbot.SuggestionsBot;
+
 public class GeneralChannel extends SuggestionChannel {
     @Override
     public String getName() {
@@ -8,6 +10,6 @@ public class GeneralChannel extends SuggestionChannel {
 
     @Override
     public long getID() {
-        return 528932962306359296L;
+        return SuggestionsBot.config.GENERAL_SUGGESTIONS_CHANNEL;
     }
 }

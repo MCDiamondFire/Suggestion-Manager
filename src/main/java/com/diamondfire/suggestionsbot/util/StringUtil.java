@@ -2,11 +2,9 @@ package com.diamondfire.suggestionsbot.util;
 
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class StringUtil {
 
