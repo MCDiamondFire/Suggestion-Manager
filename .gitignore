@@ -3,3 +3,5 @@
 gradle
 build
 /src/main/java/com/diamondfire/suggestionsbot/util/SensitiveData.java
+config.json
+/swear_filter.json

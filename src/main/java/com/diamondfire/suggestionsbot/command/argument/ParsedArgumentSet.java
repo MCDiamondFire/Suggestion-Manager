@@ -1,11 +1,11 @@
 package com.diamondfire.suggestionsbot.command.argument;
 
 
-
 import com.diamondfire.suggestionsbot.command.argument.impl.ArgumentContainer;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.MessageArgument;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParsedArgumentSet {
 

@@ -1,12 +1,12 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types;
 
 
+import com.diamondfire.suggestionsbot.SuggestionsBot;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.ReactionManager;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
 import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,7 +25,7 @@ public class PopularReference extends Reference {
 
     @Override
     public long getChannelID() {
-        return BotConstants.REACTION_POPULAR;
+        return SuggestionsBot.config.REACTION_POPULAR;
     }
 
     @Override

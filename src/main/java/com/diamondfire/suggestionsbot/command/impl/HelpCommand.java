@@ -1,18 +1,15 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.help.HelpContext;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
+import com.diamondfire.suggestionsbot.command.permissions.Permissions;
 import com.diamondfire.suggestionsbot.command.permissions.PermissionHandler;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-import java.util.stream.Collectors;
 
-
-public class HelpCommand extends Command {
+public class HelpCommand extends BotCommand {
 
     @Override
     public String getName() {
@@ -20,41 +17,31 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Lists all available commands.");
+    public String getDescription() {
+        return "Lists all available commands.";
     }
 
     @Override
-    public ArgumentSet getArguments() {
-        return new ArgumentSet();
+    public CommandData createCommand() {
+        return new CommandData(getName(), getDescription());
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.USER;
+        return Permissions.USER;
     }
 
     @Override
-    public void run(CommandEvent event) {
+    public void run(SlashCommandEvent event) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Help");
         builder.setThumbnail(BotInstance.getJda().getSelfUser().getAvatarUrl());
-        builder.setFooter("Your permissions: " + PermissionHandler.getPermission(event.getMember()));
+        builder.setFooter("Your permissions: " + PermissionHandler.getPermission(event.getMember()).getName());
 
-        BotInstance.getHandler().getCommands().values().stream()
+        BotInstance.getHandler().getCommandMap().values().stream()
                 .filter((command) -> command.getPermission().hasPermission(event.getMember()))
-                .forEach(command -> builder.addField(BotConstants.PREFIX + command.getName() + " " + generateArguments(command.getHelpContext()), command.getHelpContext().getDescription(), false));
+                .forEach(command -> builder.addField("/" + command.getName(), command.getDescription(), false));
 
-        event.getChannel().sendMessage(builder.build()).queue();
-
-
+        event.replyEmbeds(builder.build()).queue();
     }
-
-    private String generateArguments(HelpContext context) {
-        return context.getArguments().stream()
-                .map(argument -> argument.isOptional() ? String.format("[<%s>] ", argument.getArgumentName()) : String.format("<%s> ", argument.getArgumentName()))
-                .collect(Collectors.joining());
-    }
-
 }

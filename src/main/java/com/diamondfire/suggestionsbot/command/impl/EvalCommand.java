@@ -1,19 +1,20 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.argument.impl.types.MessageArgument;
-import com.diamondfire.suggestionsbot.command.help.*;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
+import com.diamondfire.suggestionsbot.command.permissions.Permissions;
 import com.diamondfire.suggestionsbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-import javax.script.*;
-import java.awt.*;
-import java.io.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 
-public class EvalCommand extends Command {
+public class EvalCommand extends BotCommand {
 
     @Override
     public String getName() {
@@ -21,42 +22,28 @@ public class EvalCommand extends Command {
     }
 
     @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Executes given code.")
-                .addArgument(
-                        new HelpContextArgument()
-                                .name("Code")
-                );
+    public String getDescription() {
+        return "Executes given code.";
     }
 
     @Override
-    public ArgumentSet getArguments() {
-        return new ArgumentSet().addArgument("code", new MessageArgument());
+    public CommandData createCommand() {
+        return new CommandData(getName(), getDescription())
+                .addOption(OptionType.STRING, "code", "The code to execute.", true);
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.MOD;
+        return Permissions.DEVELOPER;
     }
 
     @Override
-    public void run(CommandEvent event) {
-
-        // Red is a bad boy, sometimes he decides he wants to open 500 tabs on my computer! This is here to stop Red, nothing else.
-        if (!System.getProperty("os.name").contains("Linux")) {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle("No.");
-            builder.setColor(Color.red);
-
-            event.getChannel().sendMessage(builder.build()).queue();
-            return;
-        }
+    public void run(SlashCommandEvent event) {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
         engine.put("jda", event.getJDA());
         engine.put("event", event);
 
-        String code = event.getArgument("code");
+        String code = event.getOption("code").getAsString();
         code = code.replaceAll("([^(]+?)\\s*->", "function($1)");
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -67,7 +54,7 @@ public class EvalCommand extends Command {
 
             builder.setTitle("Eval Result");
             builder.addField("Object Returned:", String.format("```js\n%s```", StringUtil.fieldSafe(object)), false);
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.replyEmbeds(builder.build()).queue();
 
         } catch (Throwable e) {
             StringWriter sw = new StringWriter();
@@ -75,11 +62,8 @@ public class EvalCommand extends Command {
             String sStackTrace = sw.toString();
 
             builder.setTitle("Eval failed!");
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.replyEmbeds(builder.build()).queue();
             event.getChannel().sendMessage(String.format("```%s```", sStackTrace.length() >= 1500 ? sStackTrace.substring(0, 1500) : sStackTrace)).queue();
-
         }
-
     }
-
 }

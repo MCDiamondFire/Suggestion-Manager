@@ -5,7 +5,8 @@ import com.diamondfire.suggestionsbot.command.argument.impl.ArgumentContainer;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.Argument;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ArgumentSet {
 

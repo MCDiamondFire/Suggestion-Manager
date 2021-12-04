@@ -2,11 +2,9 @@ package com.diamondfire.suggestionsbot.database;
 
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 
 public class SimpleSingleQuery {

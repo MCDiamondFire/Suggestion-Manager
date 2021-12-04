@@ -1,5 +1,7 @@
 package com.diamondfire.suggestionsbot.suggestions.channels.channel.issue;
 
+import com.diamondfire.suggestionsbot.SuggestionsBot;
+
 public class BetaIssue extends IssueChannel {
     @Override
     public String getName() {
@@ -8,6 +10,6 @@ public class BetaIssue extends IssueChannel {
 
     @Override
     public long getID() {
-        return 574342620999057429L;
+        return SuggestionsBot.config.BETA_ISSUES_CHANNEL;
     }
 }
