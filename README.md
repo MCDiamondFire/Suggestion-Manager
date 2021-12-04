@@ -35,3 +35,20 @@ first boot the bot, you will need to create this file.
     "BETA_ISSUES_CHANNEL": long
 }
 ```
+
+**Swear Filter**
+
+After setting up the config, you will need to paste the following into the swear filter file. Otherwise, commands will not work and it will error whenever a message is sent.
+
+```json
+{
+  "equal": [
+  ],
+  "prefix": [
+  ],
+  "suffix": [
+  ],
+  "part": [
+  ]
+}
+```
