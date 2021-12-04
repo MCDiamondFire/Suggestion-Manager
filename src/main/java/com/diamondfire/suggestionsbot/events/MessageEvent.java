@@ -1,6 +1,8 @@
 package com.diamondfire.suggestionsbot.events;
 
 import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
+import com.diamondfire.suggestionsbot.util.MessageAcceptor;
+import com.diamondfire.suggestionsbot.util.chatfilter.FilterAcceptor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -9,12 +11,21 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class MessageEvent extends ListenerAdapter {
+    private static final MessageAcceptor[] acceptors = {
+            new FilterAcceptor()
+    };
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
         Message message = event.getMessage();
+        for (MessageAcceptor acceptor : acceptors) {
+            if (acceptor.accept(message)) {
+                break;
+            }
+        }
+
         long channelID = event.getChannel().getIdLong();
 
         if (ChannelHandler.isValidChannel(channelID)) {
