@@ -106,7 +106,7 @@ public class ReactionEvent extends ListenerAdapter {
                                 if (reaction == null) {
                                     continue;
                                 }
-                                if (reactName == dupeID){
+                                if (reactName.equals(dupeID)){
                                     dupeCount++;
                                 }
                                 if (!reactionStat.containsKey(reaction)) {
