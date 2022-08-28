@@ -17,7 +17,7 @@ public class PopularHandler {
                         "AND date > CURRENT_TIMESTAMP - INTERVAL 2 WEEK;")
                 .onQuery((set) -> {
                     ratio = BotConstants.MIN_RATIO + (int) set.getInt("recents"));
-                    ratio = Math.min(BotConstants.MIN_RATIO, Math.min(ratio, BotConstants.MAX_RATIO));
+                    ratio = Math.max(BotConstants.MIN_RATIO, Math.min(ratio, BotConstants.MAX_RATIO));
                 }).execute();
         BotInstance.getJda().getPresence().setActivity(Activity.watching("for " + PopularHandler.ratio + " net upvotes"));
 
