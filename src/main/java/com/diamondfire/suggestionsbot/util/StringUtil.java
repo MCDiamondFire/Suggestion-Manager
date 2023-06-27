@@ -2,73 +2,107 @@ package com.diamondfire.suggestionsbot.util;
 
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 public class StringUtil {
-
-    public static String listView(String[] array, String pointer, boolean sanitize) {
-        if (array.length == 0) {
+    
+    public static String listView(String pointer, boolean sanitize, Iterable<? extends CharSequence> array) {
+        String view = listView(pointer, array);
+        return sanitize ? StringUtil.display(view) : view;
+    }
+    
+    public static String listView(String pointer, boolean sanitize, CharSequence... elements) {
+        String view = listView(pointer, elements);
+        
+        return sanitize ? StringUtil.display(view) : view;
+    }
+    
+    public static String listView(String pointer, Iterable<? extends CharSequence> array) {
+        if (!array.iterator().hasNext()) {
             return "";
         }
-
-        String list = ("\n%s% " + String.join("\n%s% ", array)).replaceAll("%s%", pointer);
-
-
-        return sanitize ? MarkdownSanitizer.escape(list) : list;
+        
+        return "\n" + pointer + String.join("\n" + pointer, array);
     }
-
-    public static String asciidocStyle(HashMap<String, Integer> hashes) {
+    
+    public static String listView(String pointer, CharSequence... elements) {
+        if (elements.length == 0) {
+            return "";
+        }
+        
+        return "\n" + pointer + String.join("\n" + pointer, elements);
+    }
+    
+    public static String asciidocStyle(Map<String, String> hashes) {
         if (hashes.size() == 0) {
             return "";
         }
-
         String longest = hashes.keySet().stream().max(Comparator.comparingInt(String::length)).orElse(null);
-
         ArrayList<String> strings = new ArrayList<>();
-
-        hashes.entrySet()
-                .forEach((stringIntegerEntry -> strings.add(stringIntegerEntry.getKey() +
-                        Util.repeat("", " ", (longest.length() + 2) - stringIntegerEntry.getKey().length()) + ":: " + stringIntegerEntry.getValue())));
-
+        
+        for (Map.Entry<String, String> entry : hashes.entrySet()) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < (longest.length() + 2) - entry.getKey().length() + 1; i++) {
+                stringBuilder.append(" ");
+            }
+            
+            String builder = entry.getKey() +
+                    stringBuilder.toString() +
+                    ":: " +
+                    entry.getValue();
+            
+            strings.add(builder);
+        }
+        
         return String.join("\n", strings);
     }
-
-    public static String fieldSafe(String string) {
-        if (string.length() >= 950) {
-            return string.substring(0, 950) + "...";
+    
+    public static String stripColorCodes(String text) {
+        return text.replaceAll("[&§][a-zA-Z0-9]", "");
+    }
+    
+    public static List<String> splitBy(String string, int byAmt) {
+        List<String> parts = new ArrayList<>();
+        int length = string.length();
+        for (int i = 0; i < length; i += byAmt) {
+            parts.add(string.substring(i, Math.min(length, i + byAmt)));
         }
-        return string;
+        return parts;
     }
-
-    public static String fieldSafe(Object object) {
-        return fieldSafe(String.valueOf(object));
+    
+    public static String display(String string) {
+        return MarkdownSanitizer.escape(StringUtil.stripColorCodes(string));
     }
-
-    public static String titleSafe(String string) {
-        if (string.length() >= 200) {
-            return string.substring(0, 200);
+    
+    public static String sCheck(String text, int number) {
+        return number == 1 ? text : text + "s";
+    }
+    
+    /**
+     * Decodes from Base64
+     *
+     * @param Base64F Compressed Data
+     * @return Decoded Data
+     */
+    public static byte[] fromBase64(byte[] Base64F) {
+        return Base64.getDecoder().decode(Base64F);
+    }
+    
+    /**
+     * Encodes into Base64
+     *
+     * @param Base64F Data
+     * @return Encoded Data
+     */
+    public static byte[] toBase64(byte[] Base64F) {
+        return Base64.getEncoder().encode(Base64F);
+    }
+    
+    public static String trim(String str, int max) {
+        if (str.length() > max) {
+            return str.substring(0, max - 3) + "...";
+        } else {
+            return str;
         }
-        return string;
     }
-
-    public static String smartCaps(String text) {
-        String[] words = text.split(" ");
-        StringBuilder builder = new StringBuilder();
-
-        for (String word : words) {
-            if (word.length() < 2) {
-                builder.append(word.toLowerCase() + " ");
-                continue;
-            }
-
-            builder.append(word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ");
-        }
-        return builder.toString();
-
-    }
-
 }
