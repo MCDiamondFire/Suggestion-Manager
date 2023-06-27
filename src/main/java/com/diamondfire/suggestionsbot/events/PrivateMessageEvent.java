@@ -3,7 +3,7 @@ package com.diamondfire.suggestionsbot.events;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
 import com.diamondfire.suggestionsbot.util.BotConstants;
-import com.diamondfire.suggestionsbot.util.SensitiveData;
+import com.diamondfire.suggestionsbot.util.Config;
 import com.diamondfire.suggestionsbot.util.WebUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -54,7 +54,7 @@ public class PrivateMessageEvent extends ListenerAdapter {
         sendObject.add("embeds", array);
         sendObject.addProperty("username", "Dangerous Issue");
         sendObject.addProperty("avatar_url", "https://cdn.discordapp.com/emojis/274789151000363029.png?v=1");
-        WebUtil.webHook(SensitiveData.WEB_REQUEST_URL, sendObject);
+        WebUtil.webHook(Config.WEBHOOK_URL, sendObject);
 
     }
 }

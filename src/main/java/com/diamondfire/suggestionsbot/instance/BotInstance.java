@@ -7,6 +7,7 @@ import com.diamondfire.suggestionsbot.events.MessageEvent;
 import com.diamondfire.suggestionsbot.events.PrivateMessageEvent;
 import com.diamondfire.suggestionsbot.events.ReactionEvent;
 import com.diamondfire.suggestionsbot.util.BotConstants;
+import com.diamondfire.suggestionsbot.util.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -28,7 +29,7 @@ public class BotInstance {
                 new WhenCommand()
         );
 
-        JDABuilder builder = JDABuilder.createDefault(BotConstants.TOKEN);
+        JDABuilder builder = JDABuilder.createDefault(Config.TOKEN);
         builder.setStatus(OnlineStatus.ONLINE);
         builder.addEventListeners(new MessageEvent(), new ReactionEvent(), new PrivateMessageEvent());
 

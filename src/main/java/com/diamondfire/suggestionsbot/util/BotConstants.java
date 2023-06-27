@@ -2,8 +2,6 @@ package com.diamondfire.suggestionsbot.util;
 
 public interface BotConstants {
 
-    String TOKEN = SensitiveData.TOKEN;
-
     String PREFIX = "?";
 
     // The ratio cannot go lower than this.
