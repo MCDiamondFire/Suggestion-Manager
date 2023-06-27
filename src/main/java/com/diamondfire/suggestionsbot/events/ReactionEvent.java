@@ -77,6 +77,68 @@ public class ReactionEvent extends ListenerAdapter {
                     builder.addField("\u200b", Util.trim(suggestionMSG.getContentRaw(), 256), false);
 
                     BotInstance.getJda().getTextChannelById(BotConstants.REACTION_LOG).sendMessage(builder.build()).queue();
+
+                    // Dupe warning system (Posts to watched users when at 7+ dupes with high dupe ratio) - Added by Electrosolt
+                    if (reaction instanceof Duplicate) {
+                        String dupeID = reaction.getIdentifier();
+
+                        // Reaction Stat getter, copied from the Stats command. All values used to determine warn-worthiness.
+                        new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", (statement -> {
+                            statement.setLong(1, message.getAuthor().getIdLong());
+                        })).onQuery((table) -> {
+                            int suggestionCount = 0;
+                            int upVotes = 0;
+                            int downVotes = 0;
+                            int dupeCount = 0;
+                            ArrayList<String> reactions = new ArrayList<>();
+
+                            do {
+                                suggestionCount++;
+                                upVotes += table.getInt("upvotes");
+                                downVotes += table.getInt("downvotes");
+                                reactions.addAll(Arrays.asList(table.getString("special_reactions").split(",")));
+
+                            } while (table.next());
+                            HashMap<Reaction, Integer> reactionStat = new HashMap<>();
+
+                            for (String reactName : reactions) {
+                                Reaction reaction = ReactionHandler.getFromIdentifier(reactName);
+                                if (reaction == null) {
+                                    continue;
+                                }
+                                if (reactName.equals(dupeID)){
+                                    dupeCount++;
+                                }
+                                if (!reactionStat.containsKey(reaction)) {
+                                    reactionStat.put(reaction, 1);
+                                } else {
+                                    int i = reactionStat.get(reaction) + 1;
+                                    reactionStat.replace(reaction, i);
+                                }
+
+                            }
+
+                            // Determine whether to and send the warning message.
+                            // Has disabled functionality for ignoring warns if over a certain upvote threshold.
+                            if (dupeCount >= 7) {
+                                float dupeRatio = dupeCount / (float)suggestionCount;
+                                //float upvoteRatio = upVotes / ((float)downVotes + 1.0f);
+                                if (dupeRatio > 0.1){
+                                    //if (!(upvoteRatio > 6 && upvotes > 500))
+                                    builder.clear(); // Reuse Embed Builder from log message
+                                    builder.setAuthor(suggestionMSG.getAuthor().getName(), null, suggestionMSG.getAuthor().getEffectiveAvatarUrl())
+                                    builder.setTitle(reactionEmote.getEmote().getAsMention() + " **|** Duplicate Warning");
+                                    builder.setDescription(String.format("%s has reached %d duplicates (%.1f% of submissions).", suggestionMSG.getAuthor().getAsMention(), dupeCount, dupeRatio));
+                                    builder.setColor(flag.getColor());
+                                    BotInstance.getJda().getTextChannelById(BotConstants.WATCHED_USERS).sendMessage(builder.build()).queue();
+                                }
+                            }
+
+                        }).onNotFound(() -> {
+                            throw new IllegalStateException("Suggestion author somehow has no suggestions.");
+                        }).execute();
+
+                    }
                 }
             }
         }
