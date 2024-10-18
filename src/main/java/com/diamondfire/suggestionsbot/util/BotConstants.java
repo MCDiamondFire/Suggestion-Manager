@@ -5,7 +5,7 @@ public interface BotConstants {
     String PREFIX = "?";
 
     // The ratio cannot go lower than this.
-    int RATIO = 18;
+    int RATIO = 24;
 
     long UPVOTE = 612568094962876416L;
     long DOWNVOTE = 612568084414201856L;
