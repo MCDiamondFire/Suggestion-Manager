@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public abstract class Channel {
@@ -24,7 +25,7 @@ public abstract class Channel {
     protected abstract Emote[] getEmotes();
 
     public void onMessage(Message message) {
-        Stream.of(getEmotes()).forEachOrdered((reaction) -> message.addReaction(reaction).queue());
+        Stream.of(getEmotes()).forEachOrdered((reaction) -> message.addReaction(reaction).queueAfter(500, TimeUnit.MILLISECONDS));
 
         // Here we initialize a new suggestion and add it to the database. After, we can discard it...
         Suggestion suggestion = new Suggestion(message);
