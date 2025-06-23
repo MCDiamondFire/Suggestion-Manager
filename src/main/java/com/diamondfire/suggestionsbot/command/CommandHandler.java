@@ -3,11 +3,12 @@ package com.diamondfire.suggestionsbot.command;
 
 import com.diamondfire.suggestionsbot.command.impl.Command;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
-import com.diamondfire.suggestionsbot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.HashMap;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CommandHandler {
 
@@ -57,4 +58,5 @@ public class CommandHandler {
     public HashMap<String, Command> getAliases() {
         return aliases;
     }
+
 }

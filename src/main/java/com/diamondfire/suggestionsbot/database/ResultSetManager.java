@@ -5,5 +5,7 @@ import java.sql.SQLException;
 
 @FunctionalInterface
 public interface ResultSetManager {
+
     void run(ResultSet set) throws SQLException;
+
 }

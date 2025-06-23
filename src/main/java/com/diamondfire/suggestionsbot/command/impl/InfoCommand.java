@@ -1,14 +1,15 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.help.*;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
+import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class InfoCommand extends AbstractSuggestionCommand {
+
     @Override
     public String getName() {
         return "info";
@@ -35,4 +36,5 @@ public class InfoCommand extends AbstractSuggestionCommand {
 
         event.getChannel().sendMessageEmbeds(builder.build()).queue();
     }
+
 }

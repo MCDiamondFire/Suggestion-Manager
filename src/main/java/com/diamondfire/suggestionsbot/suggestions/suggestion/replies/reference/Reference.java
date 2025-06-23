@@ -1,7 +1,6 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference;
 
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import net.dv8tion.jda.api.entities.Message;
@@ -12,23 +11,23 @@ import java.util.List;
 
 public abstract class Reference {
 
-    Message reference;
+    private Message reference;
 
     public Message getReference() {
-        return reference;
+        return this.reference;
     }
 
     public void setReference(Message reference) {
         this.reference = reference;
     }
 
-    public long getID() {
-        return reference.getIdLong();
+    public long getId() {
+        return this.reference.getIdLong();
     }
 
     public abstract String getName();
 
-    public abstract long getChannelID();
+    public abstract long getChannelId();
 
     public abstract boolean syncEmojis();
 
@@ -43,12 +42,12 @@ public abstract class Reference {
 
             for (Reaction reaction : referenceReactions) {
                 if (!suggestionReactions.contains(reaction)) {
-                    suggestion.getSuggestion().addReaction(reaction.getJDA()).complete();
+                    suggestion.getSuggestion().addReaction(reaction.getJda()).complete();
                 }
             }
             for (Reaction reaction : suggestionReactions) {
                 if (!referenceReactions.contains(reaction)) {
-                    this.getReference().addReaction(reaction.getJDA()).complete();
+                    this.getReference().addReaction(reaction.getJda()).complete();
                 }
             }
 

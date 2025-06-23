@@ -1,6 +1,5 @@
 package com.diamondfire.suggestionsbot;
 
-
 import com.diamondfire.suggestionsbot.command.CommandHandler;
 import com.diamondfire.suggestionsbot.command.impl.CloneCommand;
 import com.diamondfire.suggestionsbot.command.impl.EvalCommand;

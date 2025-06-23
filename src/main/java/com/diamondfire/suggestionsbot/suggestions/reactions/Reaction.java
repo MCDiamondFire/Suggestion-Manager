@@ -53,7 +53,7 @@ public class Reaction {
         return this.isUpvote() || this.isDownvote();
     }
 
-    public Emoji getJDA() {
+    public Emoji getJda() {
         return this.jda;
     }
 

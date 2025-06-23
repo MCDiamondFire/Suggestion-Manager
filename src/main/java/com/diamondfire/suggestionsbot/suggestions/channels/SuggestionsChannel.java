@@ -32,7 +32,6 @@ public class SuggestionsChannel {
     private final String postName;
     private final boolean canGoPopular;
     private final List<Reaction> reactions;
-    private final TextChannel jda;
 
     public SuggestionsChannel(ConfigSuggestionsChannel config) {
         this.id = config.getId();
@@ -48,12 +47,11 @@ public class SuggestionsChannel {
         if (textChannel == null) {
             throw new IllegalArgumentException("Channel ID " + this.id + " is null");
         }
-        this.jda = textChannel;
     }
 
     public void onMessage(Message message) {
         for (Reaction reaction : this.reactions) {
-            message.addReaction(reaction.getJDA()).queueAfter(REACTION_ADD_DELAY_MILLIS, TimeUnit.MILLISECONDS);
+            message.addReaction(reaction.getJda()).queueAfter(REACTION_ADD_DELAY_MILLIS, TimeUnit.MILLISECONDS);
         }
 
         // Here we initialize a new suggestion and add it to the database. After, we can discard it...
@@ -74,10 +72,10 @@ public class SuggestionsChannel {
         // If it's a valid suggestion, try to popularize it and give reaction stuff.
         ReactionManager reactionManager = suggestion.getReactionManager();
         ReferenceManager referenceManager = suggestion.getReferenceManager();
-        if (reactionManager.getNetVotes() >= PopularHandler.ratio && reactionManager.canGoPopular() && suggestion.getSuggestionsChannel().canGoPopular && ChannelHandler.getSuggestionsChannelOrNull(event.getChannel().getIdLong()) != null) {
+        if (reactionManager.getNetVotes() >= PopularHandler.getRatio() && reactionManager.canGoPopular() && suggestion.getSuggestionsChannel().canGoPopular && ChannelHandler.getSuggestionsChannelOrNull(event.getChannel().getIdLong()) != null) {
             if (d2.after(d1)) {
                 referenceManager.newReference(new PopularReference(message.getGuildId()));
-            } else if (reactionManager.getNetVotes() == PopularHandler.ratio) {
+            } else if (reactionManager.getNetVotes() == PopularHandler.getRatio()) {
                 referenceManager.newReference(new PopularReference(message.getGuildId()));
             }
 
@@ -95,16 +93,8 @@ public class SuggestionsChannel {
         return this.postName;
     }
 
-    public boolean isCanGoPopular() {
-        return this.canGoPopular;
-    }
-
     public List<Reaction> getReactions() {
         return this.reactions;
-    }
-
-    public TextChannel getJDA() {
-        return this.jda;
     }
 
 }

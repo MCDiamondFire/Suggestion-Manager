@@ -1,14 +1,14 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
-import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public abstract class AbstractSuggestionCommand extends Command {
 
@@ -20,13 +20,17 @@ public abstract class AbstractSuggestionCommand extends Command {
 
     @Override
     public void run(CommandEvent event) {
-        long messageID = event.getArgument("msg");
-        new SingleQueryBuilder().query("SELECT * from suggestions WHERE message = ?", (statement) -> {
-            statement.setLong(1, messageID);
-        }).onQuery((set) -> {
+        long messageId = event.getArgument("msg");
+        new SingleQueryBuilder().query("SELECT * from suggestions WHERE message = ?", statement ->
+                statement.setLong(1, messageId)
+        ).onQuery(set -> {
             long channel = set.getLong("message_channel");
-            Suggestion suggestion = new Suggestion(BotInstance.getJda().getTextChannelById(channel).retrieveMessageById(messageID).complete());
-            run(event, suggestion);
+            TextChannel textChannel = BotInstance.getJda().getTextChannelById(channel);
+            if (textChannel == null) {
+                return;
+            }
+            Suggestion suggestion = new Suggestion(textChannel.retrieveMessageById(messageId).complete());
+            this.run(event, suggestion);
         }).onNotFound(() -> {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle("Cannot find suggestion!");
@@ -36,4 +40,5 @@ public abstract class AbstractSuggestionCommand extends Command {
     }
 
     public abstract void run(CommandEvent event, Suggestion suggestion);
+
 }

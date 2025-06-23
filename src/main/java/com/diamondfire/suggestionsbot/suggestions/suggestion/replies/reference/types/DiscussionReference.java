@@ -3,7 +3,6 @@ package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.
 import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Util;
 import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,7 +26,7 @@ public class DiscussionReference extends Reference {
     }
 
     @Override
-    public long getChannelID() {
+    public long getChannelId() {
         return this.channelId;
     }
 
@@ -49,7 +48,11 @@ public class DiscussionReference extends Reference {
         Member member = message.getGuild().retrieveMember(message.getAuthor()).complete();
 
         builder.setAuthor(member.getEffectiveName(), null, message.getAuthor().getEffectiveAvatarUrl());
-        builder.setColor(reaction != null ? reaction.getColor() : Color.gray);
+        Color color = Color.gray;
+        if (reaction != null) {
+            color = reaction.getColor();
+        }
+        builder.setColor(color);
         builder.setDescription(String.format("\uD83D\uDCE8 [New %s posted](" + message.getJumpUrl() + ")", suggestion.getSuggestionsChannel().getPostName().toLowerCase()));
         builder.addField("\u200b", Util.trim(message.getContentRaw(), 256), false);
         builder.setFooter("Posted in #" + message.getChannel().getName());

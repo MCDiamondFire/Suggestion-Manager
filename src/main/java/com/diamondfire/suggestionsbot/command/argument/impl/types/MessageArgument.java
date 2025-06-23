@@ -8,4 +8,5 @@ public class MessageArgument extends Argument<String> {
     public String getValue(@NotNull String msg) throws IllegalArgumentException {
         return msg;
     }
+
 }

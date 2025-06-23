@@ -17,7 +17,7 @@ public class MessageEvent extends ListenerAdapter {
         }
 
         Message message = event.getMessage();
-        long channelID = event.getChannel().getIdLong();
+        long channelId = event.getChannel().getIdLong();
 
         if (message.getContentDisplay().startsWith(BotConstants.PREFIX)) {
             try {
@@ -28,7 +28,7 @@ public class MessageEvent extends ListenerAdapter {
             }
         }
 
-        SuggestionsChannel channel = ChannelHandler.getSuggestionsChannelOrNull(channelID);
+        SuggestionsChannel channel = ChannelHandler.getSuggestionsChannelOrNull(channelId);
         if (channel != null) {
             channel.onMessage(message);
         }

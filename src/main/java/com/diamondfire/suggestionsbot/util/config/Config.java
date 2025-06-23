@@ -17,7 +17,7 @@ public class Config {
     private String dbUser;
     @SerializedName("db_password")
     private String dbPassword;
-    private Map<String,ConfigGuild> guilds;
+    private Map<String, ConfigGuild> guilds;
     private List<ConfigSuggestionsChannel> channels;
     private List<ConfigReaction> reactions;
 
@@ -37,7 +37,7 @@ public class Config {
         return this.dbPassword;
     }
 
-    public Map<String,ConfigGuild> getGuilds() {
+    public Map<String, ConfigGuild> getGuilds() {
         return this.guilds;
     }
 

@@ -2,7 +2,6 @@ package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
 import com.diamondfire.suggestionsbot.database.ConnectionProvider;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.sql.Connection;
@@ -29,7 +28,7 @@ public class DatabaseManager {
 
             preparedStatement.execute();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -38,12 +37,12 @@ public class DatabaseManager {
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE suggestions SET message = ?, message_channel = ?, popular_message = ?, discussion_message = ?, author_id = ?, date = ?, upvotes = ?, downvotes = ?, special_reactions = ? WHERE message = ?")) {
 
-            handleStatement(statement);
+            this.handleStatement(statement);
             statement.setLong(10, this.suggestion.getSuggestion().getIdLong());
 
             statement.execute();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -84,8 +83,8 @@ public class DatabaseManager {
             if (rs.next()) {
                 try {
                     referenceLong = rs.getLong(tableName);
-                } catch (SQLException ignored) {
-                    ignored.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
 
             }

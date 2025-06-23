@@ -2,15 +2,18 @@ package com.diamondfire.suggestionsbot.command.impl;
 
 import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.MessageArgument;
-import com.diamondfire.suggestionsbot.command.help.*;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
+import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import javax.script.*;
-import java.awt.*;
-import java.io.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.awt.Color;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 
 public class EvalCommand extends Command {

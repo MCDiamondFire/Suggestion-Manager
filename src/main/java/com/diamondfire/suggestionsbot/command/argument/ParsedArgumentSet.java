@@ -1,11 +1,11 @@
 package com.diamondfire.suggestionsbot.command.argument;
 
 
-
 import com.diamondfire.suggestionsbot.command.argument.impl.ArgumentContainer;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.MessageArgument;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParsedArgumentSet {
 
@@ -17,8 +17,8 @@ public class ParsedArgumentSet {
             ArgumentContainer container = map.getValue();
 
             if (argNum >= args.length) {
-                if (container.getArgument().isOptional()) {
-                    arguments.put(map.getKey(), container.getArgument().getDefaultValue());
+                if (container.argument().isOptional()) {
+                    arguments.put(map.getKey(), container.argument().getDefaultValue());
                     continue;
                 }
                 throw new IllegalArgumentException(String.format("Expected argument at position %s.", argNum));
@@ -26,7 +26,7 @@ public class ParsedArgumentSet {
             try {
                 //TODO Add plural argument handling
 
-                if (container.getArgument() instanceof MessageArgument) {
+                if (container.argument() instanceof MessageArgument) {
                     arguments.put(map.getKey(), container.getValue(String.join(" ", args)));
                     return;
                 } else {
@@ -34,8 +34,8 @@ public class ParsedArgumentSet {
                 }
 
             } catch (IllegalArgumentException exception) {
-                if (container.getArgument().isOptional()) {
-                    arguments.put(map.getKey(), container.getArgument().getDefaultValue());
+                if (container.argument().isOptional()) {
+                    arguments.put(map.getKey(), container.argument().getDefaultValue());
                 }
                 throw new IllegalArgumentException(String.format("Invalid argument at position %s.", argNum));
             }
@@ -51,4 +51,5 @@ public class ParsedArgumentSet {
     public <T> T getArgument(String code) {
         return (T) arguments.get(code);
     }
+
 }

@@ -28,7 +28,7 @@ public class PopularReference extends Reference {
     }
 
     @Override
-    public long getChannelID() {
+    public long getChannelId() {
         return this.channelId;
     }
 
@@ -56,17 +56,19 @@ public class PopularReference extends Reference {
 
         //TODO Fix issue where if the popular message isn't there, it doesn't correctly fetches the discussion message.
         // The reason for this, is quite simple.
-        if (suggestion.getReferenceManager() != null) {
-            Reference reference = suggestion.getReferenceManager().getReference("discussion_message");
-            if (reference != null) {
-                description.append(" or [Discussion](" + reference.getReference().getJumpUrl() + ")");
-            }
+        Reference reference = suggestion.getReferenceManager().getReference("discussion_message");
+        if (reference != null) {
+            description.append(" or [Discussion](").append(reference.getReference().getJumpUrl()).append(")");
         }
 
         builder.setDescription(description.toString());
         builder.addField("\u200b", Util.trim(message.getContentRaw(), 256), false);
         builder.setAuthor(member.getEffectiveName(), null, message.getAuthor().getEffectiveAvatarUrl());
-        builder.setColor(reaction != null ? reaction.getColor() : Color.gray);
+        Color color = Color.gray;
+        if (reaction != null) {
+            color = reaction.getColor();
+        }
+        builder.setColor(color);
         builder.setFooter("+" + manager.getNetVotes() + " (" + manager.getUpVotes() + "|" + manager.getDownVotes() + ")");
         return builder.build();
     }

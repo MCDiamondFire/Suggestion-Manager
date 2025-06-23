@@ -3,7 +3,8 @@ package com.diamondfire.suggestionsbot.command.impl;
 
 import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-import com.diamondfire.suggestionsbot.command.help.*;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
+import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
@@ -46,16 +47,13 @@ public class CloneCommand extends Command {
     @Override
     public void run(CommandEvent event) {
         TextChannel channelToClone = event.getGuild().getTextChannelById(event.getArgument("id"));
-        TextChannel toChannel = event.getGuild().getTextChannelsByName("guidelines", true).get(0);
-        List<Message> toPurge = MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).complete().getRetrievedHistory();
-
+        TextChannel toChannel = event.getGuild().getTextChannelsByName("guidelines", true).getFirst();
         if (channelToClone == null) {
-            event.getChannel().sendMessage("Channel not found!").queue();
             return;
         }
+        List<Message> toPurge = MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).complete().getRetrievedHistory();
 
-
-        MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).queue((msgs) -> {
+        MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).queue(msgs -> {
             List<Message> history = new ArrayList<>(msgs.getRetrievedHistory());
             Collections.reverse(history);
             for (Message msg : history) {
@@ -81,4 +79,5 @@ public class CloneCommand extends Command {
 
 
     }
+
 }

@@ -1,6 +1,5 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-
 import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
@@ -10,7 +9,6 @@ import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -58,9 +56,9 @@ public class StatsCommand extends Command {
             id = event.getArgument("user");
         }
 
-        new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", statement -> {
-            statement.setLong(1, id);
-        }).onQuery(table -> {
+        new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", statement ->
+                statement.setLong(1, id)
+        ).onQuery(table -> {
             int suggestionCount = 0;
             int upVotes = 0;
             int downVotes = 0;
@@ -102,12 +100,10 @@ public class StatsCommand extends Command {
 
             builder.addField("Reaction Stats", reactionStat.entrySet()
                     .stream()
-                    .map(reactionIntegerEntry -> reactionIntegerEntry.getKey().getJDA().getFormatted() + ": " + reactionIntegerEntry.getValue())
+                    .map(reactionIntegerEntry -> reactionIntegerEntry.getKey().getJda().getFormatted() + ": " + reactionIntegerEntry.getValue())
                     .collect(Collectors.joining("\n")), true);
 
-        }).onNotFound(() -> {
-            builder.setTitle("Player not found!");
-        }).execute();
+        }).onNotFound(() -> builder.setTitle("Player not found!")).execute();
 
         event.getChannel().sendMessageEmbeds(builder.build()).queue();
     }

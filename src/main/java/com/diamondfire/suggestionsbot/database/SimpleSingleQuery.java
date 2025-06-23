@@ -2,17 +2,15 @@ package com.diamondfire.suggestionsbot.database;
 
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.SQLException;
 
 public class SimpleSingleQuery {
 
-    String query;
-    PreparedStatementManager preparedStatement;
+    private String query;
+    private PreparedStatementManager preparedStatement;
 
     public SimpleSingleQuery query(@NotNull @Language("SQL") String query, @NotNull PreparedStatementManager statement) {
         this.query = query;
@@ -24,17 +22,19 @@ public class SimpleSingleQuery {
         this.query = query;
         return this;
     }
+
     public void execute() {
         try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            if (preparedStatement != null) {
-                preparedStatement.run(statement);
+             PreparedStatement statement = connection.prepareStatement(this.query)) {
+            if (this.preparedStatement != null) {
+                this.preparedStatement.run(statement);
             }
 
-           statement.execute();
+            statement.execute();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

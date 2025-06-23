@@ -8,10 +8,11 @@ import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.t
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
+import net.dv8tion.jda.api.exceptions.RateLimitedException;
 
 import java.util.HashMap;
 
-//This class handles replies and stuff like popular message msgs, discussion msg, etc.
+//This class handles replies and stuff like popular suggestion messages, discussion messages, etc.
 
 public class ReferenceManager {
 
@@ -33,7 +34,7 @@ public class ReferenceManager {
             return;
         }
 
-        TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelID());
+        TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelId());
         if (channel == null) {
             return;
         }
@@ -61,17 +62,21 @@ public class ReferenceManager {
     }
 
     private void fetchReference(Reference reference) {
-        long messageID = this.suggestion.getDatabaseManager().getReference(reference.getName());
+        long messageId = this.suggestion.getDatabaseManager().getReference(reference.getName());
 
         // Make sure to ignore lost references.
-        if (messageID == 0) {
+        if (messageId == 0) {
             return;
         }
 
         Message message = null;
         try {
-            message = BotInstance.getJda().getTextChannelById(reference.getChannelID()).retrieveMessageById(messageID).complete(true);
-        } catch (Exception ignored) {
+            TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelId());
+            if (channel == null) {
+                return;
+            }
+            message = channel.retrieveMessageById(messageId).complete(true);
+        } catch (RateLimitedException ignored) {
         }
 
         // If message cannot be found, try to create a new one. (if it must exist)
@@ -104,7 +109,7 @@ public class ReferenceManager {
             return 0;
         }
 
-        return reference.getID();
+        return reference.getId();
     }
 
     public void removeReaction(EmojiUnion reactionEmote) {
@@ -113,6 +118,5 @@ public class ReferenceManager {
             reference.getReference().clearReactions(reactionEmote).complete();
         });
     }
-
 
 }

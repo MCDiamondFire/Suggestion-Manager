@@ -12,4 +12,5 @@ public class LongArgument extends Argument<Long> {
             throw new IllegalArgumentException("Invalid long provided!");
         }
     }
+
 }

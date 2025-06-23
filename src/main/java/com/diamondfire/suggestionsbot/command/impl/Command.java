@@ -21,4 +21,5 @@ public abstract class Command {
     public abstract Permission getPermission();
 
     public abstract void run(CommandEvent event);
+
 }

@@ -2,13 +2,14 @@ package com.diamondfire.suggestionsbot.util;
 
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
-public class StringUtil {
+public final class StringUtil {
+
+    private StringUtil() {
+    }
 
     public static String listView(String[] array, String pointer, boolean sanitize) {
         if (array.length == 0) {
@@ -18,11 +19,15 @@ public class StringUtil {
         String list = ("\n%s% " + String.join("\n%s% ", array)).replaceAll("%s%", pointer);
 
 
-        return sanitize ? MarkdownSanitizer.escape(list) : list;
+        if (sanitize) {
+            return MarkdownSanitizer.escape(list);
+        } else {
+            return list;
+        }
     }
 
     public static String asciidocStyle(HashMap<String, Integer> hashes) {
-        if (hashes.size() == 0) {
+        if (hashes.isEmpty()) {
             return "";
         }
 
@@ -31,8 +36,8 @@ public class StringUtil {
         ArrayList<String> strings = new ArrayList<>();
 
         hashes.entrySet()
-                .forEach((stringIntegerEntry -> strings.add(stringIntegerEntry.getKey() +
-                        Util.repeat("", " ", (longest.length() + 2) - stringIntegerEntry.getKey().length()) + ":: " + stringIntegerEntry.getValue())));
+                .forEach(stringIntegerEntry -> strings.add(stringIntegerEntry.getKey() +
+                        " ".repeat(longest.length() + 2 - stringIntegerEntry.getKey().length()) + ":: " + stringIntegerEntry.getValue()));
 
         return String.join("\n", strings);
     }
@@ -61,11 +66,11 @@ public class StringUtil {
 
         for (String word : words) {
             if (word.length() < 2) {
-                builder.append(word.toLowerCase() + " ");
+                builder.append(word.toLowerCase()).append(" ");
                 continue;
             }
 
-            builder.append(word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ");
+            builder.append(word.substring(0, 1).toUpperCase()).append(word.substring(1).toLowerCase()).append(" ");
         }
         return builder.toString();
 

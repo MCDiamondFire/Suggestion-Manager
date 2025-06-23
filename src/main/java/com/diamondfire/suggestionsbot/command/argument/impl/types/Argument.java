@@ -23,5 +23,5 @@ public abstract class Argument<T> {
     public <T> T getDefaultValue() {
         return (T) defaultValue;
     }
+
 }
- 

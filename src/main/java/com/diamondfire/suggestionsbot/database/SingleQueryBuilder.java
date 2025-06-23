@@ -7,11 +7,12 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * <h1>SingleQueryBuilder</h1>
  * The SingleQueryBuilder class allows you to initialize a prepared query within lambda statements.
- *
+ * <p>
  * Here is an example of a basic implementation
  *
  * <pre>{@code
@@ -31,15 +32,15 @@ import java.sql.ResultSet;
  * As you can see, "SELECT * FROM players WHERE uuid = ?" is queried after given its values from {@link PreparedStatementManager}.
  * Then, if the query result is not empty it will execute .onQuery(), otherwise it will execute .onNotFound() if it was specified.
  *
- * @author  Owen1212055
+ * @author Owen1212055
  * @version 1.0
  */
 public class SingleQueryBuilder {
 
-    String query;
-    PreparedStatementManager preparedStatement;
-    ResultSetManager onQuery;
-    Runnable onFail;
+    private String query;
+    private PreparedStatementManager preparedStatement;
+    private ResultSetManager onQuery;
+    private Runnable onFail;
 
     public SingleQueryBuilder query(@NotNull @Language("SQL") String query, @NotNull PreparedStatementManager statement) {
         this.query = query;
@@ -84,23 +85,24 @@ public class SingleQueryBuilder {
 
     public void execute() {
         try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            if (preparedStatement != null) {
-                preparedStatement.run(statement);
+             PreparedStatement statement = connection.prepareStatement(this.query)) {
+            if (this.preparedStatement != null) {
+                this.preparedStatement.run(statement);
             }
 
             ResultSet set = statement.executeQuery();
             if (set.next()) {
-                onQuery.run(set);
+                this.onQuery.run(set);
             } else {
-               if (onFail != null) {
-                   onFail.run();
-               }
+                if (this.onFail != null) {
+                    this.onFail.run();
+                }
             }
             set.close();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

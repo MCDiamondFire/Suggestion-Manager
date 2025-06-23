@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class WebUtil {
+
     public static void webHook(String url, JsonObject object) {
         HttpURLConnection connection = null;
         try {
@@ -35,6 +36,7 @@ public class WebUtil {
             }
         }
     }
+
     public static void webHook(String url, String string) {
         HttpURLConnection connection = null;
         try {
@@ -65,4 +67,5 @@ public class WebUtil {
             }
         }
     }
+
 }

@@ -1,15 +1,17 @@
 package com.diamondfire.suggestionsbot.events;
 
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.command.argument.ParsedArgumentSet;
 import com.diamondfire.suggestionsbot.command.impl.Command;
-import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.util.BotConstants;
-import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.util.Arrays;
+import java.util.Map;
 
 public class CommandEvent extends MessageReceivedEvent {
 
@@ -50,15 +52,15 @@ public class CommandEvent extends MessageReceivedEvent {
     }
 
     public Command getCommand() {
-        return command;
+        return this.command;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T getArgument(String code) {
-        return (T) parsedArgumentSet.getArgument(code);
+        return this.parsedArgumentSet.getArgument(code);
     }
 
     public Map<String, ?> getArguments() {
-        return parsedArgumentSet.getArguments();
+        return this.parsedArgumentSet.getArguments();
     }
+
 }

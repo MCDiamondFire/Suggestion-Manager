@@ -12,4 +12,5 @@ public class IntegerArgument extends Argument<Integer> {
             throw new IllegalArgumentException("Invalid integer provided!");
         }
     }
+
 }

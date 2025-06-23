@@ -1,12 +1,14 @@
 package com.diamondfire.suggestionsbot.command.help;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HelpContext {
 
     String description = null;
     CommandCategory commandCategory = null;
-    List<HelpContextArgument> arguments = new ArrayList<>();
+    final List<HelpContextArgument> arguments = new ArrayList<>();
 
     public HelpContext description(String description) {
         this.description = description;
@@ -39,4 +41,5 @@ public class HelpContext {
     public List<HelpContextArgument> getArguments() {
         return arguments;
     }
+
 }
