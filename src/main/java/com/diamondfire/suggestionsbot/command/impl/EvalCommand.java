@@ -49,7 +49,7 @@ public class EvalCommand extends Command {
             builder.setTitle("No.");
             builder.setColor(Color.red);
 
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessageEmbeds(builder.build()).queue();
             return;
         }
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
@@ -67,7 +67,7 @@ public class EvalCommand extends Command {
 
             builder.setTitle("Eval Result");
             builder.addField("Object Returned:", String.format("```js\n%s```", StringUtil.fieldSafe(object)), false);
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessageEmbeds(builder.build()).queue();
 
         } catch (Throwable e) {
             StringWriter sw = new StringWriter();
@@ -75,7 +75,7 @@ public class EvalCommand extends Command {
             String sStackTrace = sw.toString();
 
             builder.setTitle("Eval failed!");
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessageEmbeds(builder.build()).queue();
             event.getChannel().sendMessage(String.format("```%s```", sStackTrace.length() >= 1500 ? sStackTrace.substring(0, 1500) : sStackTrace)).queue();
 
         }

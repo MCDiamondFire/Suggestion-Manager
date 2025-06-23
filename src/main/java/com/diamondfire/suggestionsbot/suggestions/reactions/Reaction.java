@@ -1,7 +1,7 @@
 package com.diamondfire.suggestionsbot.suggestions.reactions;
 
 import com.diamondfire.suggestionsbot.instance.BotInstance;
-import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 import java.awt.*;
 
@@ -9,8 +9,8 @@ public abstract class Reaction {
 
     public abstract long getID();
 
-    public Emote getEmote() {
-        return BotInstance.getJda().getEmoteById(getID());
+    public RichCustomEmoji getEmote() {
+        return BotInstance.getJda().getEmojiById(getID());
     }
 
     public abstract String getIdentifier();

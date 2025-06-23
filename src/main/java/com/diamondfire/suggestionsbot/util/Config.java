@@ -14,7 +14,6 @@ public class Config {
     private static final String TOKEN_KEY = "token";
     private static final String USER_KEY = "user";
     private static final String PASSWORD_KEY = "pass";
-    private static final String SECRET_SUGGESTIONS_KEY = "secret-issues-webhook-url";
 
     public static String TOKEN;
     public static String PASSWORD;
@@ -49,7 +48,6 @@ public class Config {
                 USER = properties.getProperty(USER_KEY);
                 PASSWORD = properties.getProperty(PASSWORD_KEY);
                 URL = properties.getProperty(URL_KEY);
-                WEBHOOK_URL = properties.getProperty(SECRET_SUGGESTIONS_KEY);
             } catch (Exception exception) {
                 throw new IllegalStateException("Invalid config property: " + exception.getMessage(), exception);
             }
@@ -63,7 +61,6 @@ public class Config {
         properties.put(USER_KEY, "db-user");
         properties.put(PASSWORD_KEY, "db-password");
         properties.put(URL_KEY, "url");
-        properties.put(WEBHOOK_URL, "webhook-url.com");
 
         return properties;
     }

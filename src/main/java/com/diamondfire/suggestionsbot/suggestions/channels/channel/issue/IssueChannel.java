@@ -1,7 +1,7 @@
 package com.diamondfire.suggestionsbot.suggestions.channels.channel.issue;
 
 import com.diamondfire.suggestionsbot.suggestions.channels.Channel;
-import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 public abstract class IssueChannel extends Channel {
 
@@ -11,7 +11,8 @@ public abstract class IssueChannel extends Channel {
     }
 
     @Override
-    protected Emote[] getEmotes() {
-        return new Emote[0];
+    protected RichCustomEmoji[] getEmotes() {
+        return new RichCustomEmoji[0];
     }
+
 }

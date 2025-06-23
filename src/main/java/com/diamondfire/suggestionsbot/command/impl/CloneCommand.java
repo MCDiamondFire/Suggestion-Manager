@@ -8,7 +8,7 @@ import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class CloneCommand extends Command {
             List<Message> history = new ArrayList<>(msgs.getRetrievedHistory());
             Collections.reverse(history);
             for (Message msg : history) {
-                toChannel.sendMessage(msg).queue();
+                msg.forwardTo(toChannel).queue();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

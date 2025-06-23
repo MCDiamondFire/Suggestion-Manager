@@ -1,24 +1,23 @@
 package com.diamondfire.suggestionsbot.suggestions.reactions;
 
 
-import com.diamondfire.suggestionsbot.suggestions.reactions.misc.*;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.accept.Accept;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.accept.OtherAccept;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.accept.Patched;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Denied;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.denied.Duplicate;
-import net.dv8tion.jda.api.entities.Emote;
+import com.diamondfire.suggestionsbot.suggestions.reactions.misc.*;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ReactionHandler {
+
     private static final HashMap<Long, Reaction> idList = new HashMap<>();
     private static final HashMap<String, Reaction> identityList = new HashMap<>();
 
@@ -64,22 +63,22 @@ public class ReactionHandler {
         List<Reaction> reactions = new ArrayList<>();
 
         for (MessageReaction reaction : message.getReactions()) {
-            MessageReaction.ReactionEmote emote = reaction.getReactionEmote();
-            if (emote.isEmote()) {
-               Reaction sugReaction = ReactionHandler.getReaction(emote.getIdLong());
-               if (sugReaction != null) {
-                   reactions.add(sugReaction);
-               }
+            if (!(reaction instanceof CustomEmoji)) {
+                continue;
+            }
+            Reaction sugReaction = ReactionHandler.getReaction(reaction.getEmoji().asCustom().getIdLong());
+            if (sugReaction != null) {
+                reactions.add(sugReaction);
             }
         }
 
         return reactions;
     }
 
-    public static boolean isFirst(Message message, Emote emote) {
+    public static boolean isFirst(Message message, EmojiUnion emote) {
         return message.getReactions().stream()
-                .filter(reaction -> reaction.getReactionEmote().isEmote())
-                .anyMatch((reactionEmotez) -> reactionEmotez.getReactionEmote().getEmote().equals(emote) && reactionEmotez.getCount() == 1);
+                .filter(reaction -> reaction.getEmoji() instanceof CustomEmoji)
+                .anyMatch((reactionEmotes) -> reactionEmotes.getEmoji().asCustom().getIdLong() == emote.asCustom().getIdLong() && reactionEmotes.getCount() == 1);
     }
 
 

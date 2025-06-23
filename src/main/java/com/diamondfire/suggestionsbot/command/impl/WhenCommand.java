@@ -35,7 +35,7 @@ public class WhenCommand extends Command {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("When is it coming?");
         builder.addField("When the devs get to it.", "The devs are busy, they have a life and they decide when to add things as they please. Do not expect them to instantly add your cool suggestion.", true);
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.getChannel().sendMessageEmbeds(builder.build()).queue();
 
     }
 

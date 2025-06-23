@@ -5,6 +5,7 @@ import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import com.diamondfire.suggestionsbot.suggestions.reactions.flag.ReactionFlag;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
 import java.util.Comparator;
 import java.util.List;
@@ -19,17 +20,17 @@ public class ReactionManager {
 
     public ReactionManager(Suggestion suggestion) {
         List<MessageReaction> reactions = suggestion.getSuggestion().getReactions().stream()
-                .filter(reaction -> reaction.getReactionEmote().isEmote())
+                .filter(reaction -> reaction.getEmoji() instanceof CustomEmoji)
                 .collect(Collectors.toList());
 
         downVotes = reactions.stream()
-                .filter(reaction -> reaction.getReactionEmote().getIdLong() == BotConstants.DOWNVOTE)
+                .filter(reaction -> reaction.getEmoji().asCustom().getIdLong() == BotConstants.DOWNVOTE)
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;
 
         upVotes = reactions.stream()
-                .filter(reaction -> reaction.getReactionEmote().getIdLong() == BotConstants.UPVOTE)
+                .filter(reaction -> reaction.getEmoji().asCustom().getIdLong() == BotConstants.UPVOTE)
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;

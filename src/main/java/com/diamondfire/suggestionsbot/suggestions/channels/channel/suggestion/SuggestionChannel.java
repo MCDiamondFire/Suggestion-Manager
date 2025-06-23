@@ -1,9 +1,9 @@
 package com.diamondfire.suggestionsbot.suggestions.channels.channel.suggestion;
 
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.channels.Channel;
-import net.dv8tion.jda.api.entities.Emote;
+import com.diamondfire.suggestionsbot.util.BotConstants;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 public abstract class SuggestionChannel extends Channel {
 
@@ -13,8 +13,9 @@ public abstract class SuggestionChannel extends Channel {
     }
 
     @Override
-    protected Emote[] getEmotes() {
-        return new Emote[]{BotInstance.getJda().getEmoteById(BotConstants.UPVOTE),
-                BotInstance.getJda().getEmoteById(BotConstants.DOWNVOTE)};
+    protected RichCustomEmoji[] getEmotes() {
+        return new RichCustomEmoji[]{BotInstance.getJda().getEmojiById(BotConstants.UPVOTE),
+                BotInstance.getJda().getEmojiById(BotConstants.DOWNVOTE)};
     }
+
 }

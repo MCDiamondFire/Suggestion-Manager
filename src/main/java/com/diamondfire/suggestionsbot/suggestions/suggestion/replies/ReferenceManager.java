@@ -7,7 +7,8 @@ import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.t
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public class ReferenceManager {
 
         TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelID());
 
-        channel.sendMessage(reference.create(suggestion)).queue((message) -> {
+        channel.sendMessageEmbeds(reference.create(suggestion)).queue((message) -> {
             // Set the reference to the newly defined message.
             reference.setReference(message);
             references.put(reference.getName(), reference);
@@ -100,10 +101,10 @@ public class ReferenceManager {
         return reference.getID();
     }
 
-    public void removeReaction(MessageReaction.ReactionEmote reactionEmote) {
-        suggestion.getSuggestion().clearReactions(reactionEmote.getEmote()).complete();
+    public void removeReaction(EmojiUnion reactionEmote) {
+        suggestion.getSuggestion().clearReactions(reactionEmote).complete();
         getReferences().values().forEach((reference -> {
-            reference.getReference().clearReactions(reactionEmote.getEmote()).complete();
+            reference.getReference().clearReactions(reactionEmote).complete();
         }));
     }
 

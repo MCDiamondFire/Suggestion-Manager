@@ -30,7 +30,7 @@ public abstract class AbstractSuggestionCommand extends Command {
         }).onNotFound(() -> {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle("Cannot find suggestion!");
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessageEmbeds(builder.build()).queue();
         }).execute();
 
     }

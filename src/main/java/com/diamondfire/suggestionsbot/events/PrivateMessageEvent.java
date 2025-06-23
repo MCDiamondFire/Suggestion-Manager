@@ -1,8 +1,5 @@
 package com.diamondfire.suggestionsbot.events;
 
-import com.diamondfire.suggestionsbot.instance.BotInstance;
-import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Config;
 import com.diamondfire.suggestionsbot.util.WebUtil;
 import com.google.gson.Gson;
@@ -11,11 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
@@ -23,14 +19,16 @@ public class PrivateMessageEvent extends ListenerAdapter {
 
     //TODO Pretty this up lol
     @Override
-    public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) return;
+    public void onMessageReceived(MessageReceivedEvent event) {
+        if (event.getAuthor().isBot() || event.getChannelType() != ChannelType.PRIVATE) {
+            return;
+        }
 
         EmbedBuilder sentMSG = new EmbedBuilder();
         sentMSG.setTitle("Thank you for your report!");
         sentMSG.setDescription("You have successfully reported your message as a **dangerous issue**. If this was a mistake, please make sure to notify us in <#528932649394241536>.");
         sentMSG.setColor(Color.GREEN);
-        event.getChannel().sendMessage(sentMSG.build()).queue();
+        event.getChannel().sendMessageEmbeds(sentMSG.build()).queue();
 
         EmbedBuilder builderIssue = new EmbedBuilder();
         builderIssue.setDescription(event.getMessage().getContentRaw());
@@ -40,10 +38,10 @@ public class PrivateMessageEvent extends ListenerAdapter {
 
         // Attachment handling
         List<Message.Attachment> attachmentList = event.getMessage().getAttachments();
-        if (attachmentList.size() != 0) {
+        if (!attachmentList.isEmpty()) {
             StringBuilder attachments = new StringBuilder();
             for (Message.Attachment attachment : attachmentList) {
-                attachments.append(attachment.getProxyUrl() + "\n");
+                attachments.append(attachment.getProxyUrl()).append("\n");
             }
             builderIssue.addField("Attachments", attachments.toString(), false);
         }
@@ -57,4 +55,5 @@ public class PrivateMessageEvent extends ListenerAdapter {
         WebUtil.webHook(Config.WEBHOOK_URL, sendObject);
 
     }
+
 }

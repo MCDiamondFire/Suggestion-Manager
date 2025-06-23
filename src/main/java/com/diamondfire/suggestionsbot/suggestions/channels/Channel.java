@@ -1,12 +1,12 @@
 package com.diamondfire.suggestionsbot.suggestions.channels;
 
+import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.DiscussionReference;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
-import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -21,7 +21,7 @@ public abstract class Channel {
 
     public abstract boolean canGoPopular();
 
-    protected abstract Emote[] getEmotes();
+    protected abstract RichCustomEmoji[] getEmotes();
 
     public void onMessage(Message message) {
         Stream.of(getEmotes()).forEachOrdered((reaction) -> message.addReaction(reaction).queue());
@@ -33,7 +33,7 @@ public abstract class Channel {
 
     }
 
-    public void onSuggestionReaction(Suggestion suggestion, GuildMessageReactionAddEvent event) {
+    public void onSuggestionReaction(Suggestion suggestion, MessageReactionAddEvent event) {
         Message message = suggestion.getSuggestion();
 
         LocalDate currentDate = LocalDate.now();
@@ -56,6 +56,7 @@ public abstract class Channel {
 
 
     }
+
 }
 
 

@@ -33,6 +33,6 @@ public class InfoCommand extends AbstractSuggestionCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.addField("References: ", String.join("\n", suggestion.referenceManager.getReferences().keySet()), true);
 
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.getChannel().sendMessageEmbeds(builder.build()).queue();
     }
 }

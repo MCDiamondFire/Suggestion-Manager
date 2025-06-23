@@ -15,19 +15,21 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import javax.annotation.Nonnull;
 
 public class ReactionEvent extends ListenerAdapter {
 
     @Override
-    public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
 
-        MessageReaction.ReactionEmote reactionEmote = event.getReactionEmote();
-        if (event.getUser().isBot() || !reactionEmote.isEmote()) return;
+        EmojiUnion reactionEmote = event.getReaction().getEmoji();
+        if (event.getUser() == null || event.getUser().isBot() || !(reactionEmote instanceof CustomEmoji)) {
+            return;
+        }
 
 
         //  Prevents self reacting
@@ -36,9 +38,9 @@ public class ReactionEvent extends ListenerAdapter {
         boolean selfReacted = false;
         Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
 
-        if (reactionEmote.getIdLong() == BotConstants.UPVOTE || reactionEmote.getIdLong() == BotConstants.DOWNVOTE) {
+        if (reactionEmote.asCustom().getIdLong() == BotConstants.UPVOTE || reactionEmote.asCustom().getIdLong() == BotConstants.DOWNVOTE) {
             if (message.getAuthor().getIdLong() == event.getUser().getIdLong()) {
-                message.removeReaction(event.getReactionEmote().getEmote(), event.getUser()).queue();
+                message.removeReaction(reactionEmote, event.getUser()).queue();
                 selfReacted = true;
             }
         }
@@ -60,23 +62,23 @@ public class ReactionEvent extends ListenerAdapter {
         if (suggestion.isValid()) {
             suggestion.getChannel().onSuggestionReaction(suggestion, event);
 
-            Reaction reaction = ReactionHandler.getReaction(reactionEmote.getIdLong());
+            Reaction reaction = ReactionHandler.getReaction(reactionEmote.asCustom().getIdLong());
             User user = event.getUser();
             Message suggestionMSG = suggestion.getSuggestion();
 
             //TODO Cleaner implementation for this, maybe some kind of new "throwaway" reference.
             if (reaction instanceof ReactionFlag) {
                 ReactionFlag flag = (ReactionFlag) reaction;
-                if (ReactionHandler.isFirst(message, reactionEmote.getEmote())) {
+                if (ReactionHandler.isFirst(message, reactionEmote)) {
                     String channelName = suggestion.getChannel().getName();
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
-                    builder.setTitle(reactionEmote.getEmote().getAsMention() + " **|** " + String.format("%s %s", channelName, flag.getEmbedName()));
+                    builder.setTitle(reactionEmote.getFormatted() + " **|** " + String.format("%s %s", channelName, flag.getEmbedName()));
                     builder.setDescription(String.format("[%s](%s) posted by %s was %s by %s.\n", channelName, suggestionMSG.getJumpUrl(), suggestionMSG.getAuthor().getAsMention(), flag.getEmbedName().toLowerCase(), user.getAsMention()));
                     builder.setColor(flag.getColor());
                     builder.addField("\u200b", Util.trim(suggestionMSG.getContentRaw(), 256), false);
 
-                    BotInstance.getJda().getTextChannelById(BotConstants.REACTION_LOG).sendMessage(builder.build()).queue();
+                    BotInstance.getJda().getTextChannelById(BotConstants.REACTION_LOG).sendMessageEmbeds(builder.build()).queue();
                 }
             }
         }
@@ -84,16 +86,16 @@ public class ReactionEvent extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionRemove(@Nonnull GuildMessageReactionRemoveEvent event) {
-        MessageReaction.ReactionEmote reactionEmote = event.getReactionEmote();
+    public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        EmojiUnion reactionEmote = event.getEmoji();
         Member member = event.getGuild().retrieveMemberById(event.getUserId()).complete();
 
-        if (!member.getUser().isBot() && !reactionEmote.isEmote()) return;
+        if (!member.getUser().isBot() && !(reactionEmote instanceof CustomEmoji)) return;
 
         Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
         Suggestion suggestion = Suggestion.deepFind(message);
 
-        if (PermissionHandler.getPermission(member).getPermissionLevel() >= Permission.MOD.getPermissionLevel() && ReactionHandler.getReaction(reactionEmote.getIdLong()) != null) {
+        if (PermissionHandler.getPermission(member).getPermissionLevel() >= Permission.MOD.getPermissionLevel() && ReactionHandler.getReaction(reactionEmote.asCustom().getIdLong()) != null) {
             suggestion.referenceManager.removeReaction(reactionEmote);
             suggestion.referenceManager.plainRefresh();
         }

@@ -46,7 +46,7 @@ public class HelpCommand extends Command {
                 .filter((command) -> command.getPermission().hasPermission(event.getMember()))
                 .forEach(command -> builder.addField(BotConstants.PREFIX + command.getName() + " " + generateArguments(command.getHelpContext()), command.getHelpContext().getDescription(), false));
 
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.getChannel().sendMessageEmbeds(builder.build()).queue();
 
 
     }

@@ -6,12 +6,12 @@ import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
 import java.util.*;
 
-public class CommandEvent extends GuildMessageReceivedEvent {
+public class CommandEvent extends MessageReceivedEvent {
 
     private ParsedArgumentSet parsedArgumentSet = null;
     private Command command = null;
@@ -42,7 +42,7 @@ public class CommandEvent extends GuildMessageReceivedEvent {
             builder.setColor(Color.RED);
             builder.setDescription(e.getMessage());
 
-            message.getChannel().sendMessage(builder.build()).queue();
+            message.getChannel().sendMessageEmbeds(builder.build()).queue();
             throw new IllegalArgumentException();
         }
 

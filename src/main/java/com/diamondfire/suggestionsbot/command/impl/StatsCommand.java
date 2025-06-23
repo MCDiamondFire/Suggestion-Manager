@@ -107,7 +107,7 @@ public class StatsCommand extends Command {
             builder.setTitle("Player not found!");
         }).execute();
 
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.getChannel().sendMessageEmbeds(builder.build()).queue();
 
 
     }

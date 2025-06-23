@@ -34,7 +34,7 @@ public class CommandHandler {
                 builder.setTitle("No Permission!");
                 builder.setDescription("Sorry, you do not have permission to use this command. Commands that you are able to use are listed in ?help.");
                 builder.setFooter("Permission Required: " + command.getPermission().name());
-                e.getChannel().sendMessage(builder.build()).queue();
+                e.getChannel().sendMessageEmbeds(builder.build()).queue();
                 return;
             }
 

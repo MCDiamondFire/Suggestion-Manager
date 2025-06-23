@@ -1,0 +1,14 @@
+name: suggestionsbot
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: suggestionsbot
+      MYSQL_USER: suggestionsbot
+      MYSQL_PASSWORD: suggestionsbot
+      MYSQL_DATABASE: suggestionsbot
+    ports:
+      - "3306:3306"
+    volumes:
+      - './schema.sql:/docker-entrypoint-initdb.d/1.sql'
