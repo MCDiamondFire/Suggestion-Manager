@@ -1,14 +1,16 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
 import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-import com.diamondfire.suggestionsbot.command.help.*;
+import com.diamondfire.suggestionsbot.command.help.HelpContext;
+import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
-import com.diamondfire.suggestionsbot.instance.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
+import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -56,9 +58,9 @@ public class StatsCommand extends Command {
             id = event.getArgument("user");
         }
 
-        new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", (statement -> {
+        new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", statement -> {
             statement.setLong(1, id);
-        })).onQuery((table) -> {
+        }).onQuery(table -> {
             int suggestionCount = 0;
             int upVotes = 0;
             int downVotes = 0;
@@ -74,7 +76,7 @@ public class StatsCommand extends Command {
             HashMap<Reaction, Integer> reactionStat = new HashMap<>();
 
             for (String reactName : reactions) {
-                Reaction reaction = ReactionHandler.getFromIdentifier(reactName);
+                Reaction reaction = ReactionHandler.getReaction(reactName);
                 if (reaction == null) {
                     continue;
                 }
@@ -93,14 +95,14 @@ public class StatsCommand extends Command {
             String[] stats = new String[]{
                     "Total Suggestions: " + suggestionCount,
                     "Total Upvotes: " + upVotes,
-                    "Total Downvotes: " + downVotes,
-
+                    "Total Downvotes: " + downVotes
             };
+
             builder.addField("Suggestion Stats", String.join("\n", stats), true);
 
             builder.addField("Reaction Stats", reactionStat.entrySet()
                     .stream()
-                    .map((reactionIntegerEntry -> reactionIntegerEntry.getKey().getEmote().getAsMention() + ": " + reactionIntegerEntry.getValue()))
+                    .map(reactionIntegerEntry -> reactionIntegerEntry.getKey().getJDA().getFormatted() + ": " + reactionIntegerEntry.getValue())
                     .collect(Collectors.joining("\n")), true);
 
         }).onNotFound(() -> {
@@ -108,7 +110,6 @@ public class StatsCommand extends Command {
         }).execute();
 
         event.getChannel().sendMessageEmbeds(builder.build()).queue();
-
-
     }
+
 }

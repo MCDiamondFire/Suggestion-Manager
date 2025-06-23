@@ -5,7 +5,7 @@ import com.diamondfire.suggestionsbot.command.help.HelpContext;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.command.permissions.PermissionHandler;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
-import com.diamondfire.suggestionsbot.instance.BotInstance;
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
 

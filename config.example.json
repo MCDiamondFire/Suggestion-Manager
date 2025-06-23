@@ -1,0 +1,23 @@
+{
+  "token": 100000000000000000,
+  "jdbc_url": "jdbc:mysql://localhost:3306/suggestionsbot",
+  "db_user": "suggestionsbot",
+  "db_password": "suggestionsbot",
+  "guilds": [
+    {
+      "id": 100000000000000000,
+      "name": "Test Server",
+      "channels": [
+        {
+          "id": 100000000000000000,
+          "type": "discussion"
+        },
+        {
+          "id": 100000000000000000,
+          "type": "suggestions",
+          "post_name": "Test Suggestion"
+        }
+      ]
+    }
+  ]
+}

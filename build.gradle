@@ -20,6 +20,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.5.18'
     implementation 'com.google.code.gson:gson:2.13.1'
     implementation 'com.mysql:mysql-connector-j:9.3.0'
+    implementation 'org.jspecify:jspecify:1.0.0'
 }
 
 jar {

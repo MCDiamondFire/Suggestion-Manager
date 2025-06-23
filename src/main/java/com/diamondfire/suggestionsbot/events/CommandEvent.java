@@ -2,7 +2,7 @@ package com.diamondfire.suggestionsbot.events;
 
 import com.diamondfire.suggestionsbot.command.argument.ParsedArgumentSet;
 import com.diamondfire.suggestionsbot.command.impl.Command;
-import com.diamondfire.suggestionsbot.instance.BotInstance;
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.util.BotConstants;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Message;

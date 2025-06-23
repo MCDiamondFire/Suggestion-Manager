@@ -6,7 +6,7 @@ import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
 
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
 import com.diamondfire.suggestionsbot.events.CommandEvent;
-import com.diamondfire.suggestionsbot.instance.BotInstance;
+import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import net.dv8tion.jda.api.EmbedBuilder;
 

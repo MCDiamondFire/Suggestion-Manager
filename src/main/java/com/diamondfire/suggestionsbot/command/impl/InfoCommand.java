@@ -31,7 +31,7 @@ public class InfoCommand extends AbstractSuggestionCommand {
     @Override
     public void run(CommandEvent event, Suggestion suggestion) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("References: ", String.join("\n", suggestion.referenceManager.getReferences().keySet()), true);
+        builder.addField("References: ", String.join("\n", suggestion.getReferenceManager().getReferences().keySet()), true);
 
         event.getChannel().sendMessageEmbeds(builder.build()).queue();
     }

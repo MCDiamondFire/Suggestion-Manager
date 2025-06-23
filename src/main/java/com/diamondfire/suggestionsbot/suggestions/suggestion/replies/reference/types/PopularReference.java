@@ -1,22 +1,26 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types;
 
-
+import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
+import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.ReactionManager;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
-import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.util.BotConstants;
 import com.diamondfire.suggestionsbot.util.Util;
+import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class PopularReference extends Reference {
 
+    private final long channelId;
+
+    public PopularReference(String guildId) {
+        this.channelId = ConfigLoader.getConfig().getGuilds().get(guildId).getPopularChannel();
+    }
 
     @Override
     public String getName() {
@@ -25,7 +29,7 @@ public class PopularReference extends Reference {
 
     @Override
     public long getChannelID() {
-        return BotConstants.REACTION_POPULAR;
+        return this.channelId;
     }
 
     @Override
@@ -43,17 +47,17 @@ public class PopularReference extends Reference {
         PopularHandler.calculate();
         Message message = suggestion.getSuggestion();
         EmbedBuilder builder = new EmbedBuilder();
-        ReactionManager manager = suggestion.reactionManager;
-        Reaction reaction = manager.getTopReaction();
+        ReactionManager manager = suggestion.getReactionManager();
+        ResultReaction reaction = manager.getTopReaction();
         Member member = message.getGuild().retrieveMember(message.getAuthor()).complete();
 
         StringBuilder description = new StringBuilder();
-        description.append(String.format("\uD83D\uDCE8 Jump to [%s](" + message.getJumpUrl() + ")", suggestion.getChannel().getName()));
+        description.append(String.format("\uD83D\uDCE8 Jump to [%s](" + message.getJumpUrl() + ")", suggestion.getSuggestionsChannel().getPostName()));
 
         //TODO Fix issue where if the popular message isn't there, it doesn't correctly fetches the discussion message.
         // The reason for this, is quite simple.
-        if (suggestion.referenceManager != null) {
-            Reference reference = suggestion.referenceManager.getReference("discussion_message");
+        if (suggestion.getReferenceManager() != null) {
+            Reference reference = suggestion.getReferenceManager().getReference("discussion_message");
             if (reference != null) {
                 description.append(" or [Discussion](" + reference.getReference().getJumpUrl() + ")");
             }
@@ -65,6 +69,6 @@ public class PopularReference extends Reference {
         builder.setColor(reaction != null ? reaction.getColor() : Color.gray);
         builder.setFooter("+" + manager.getNetVotes() + " (" + manager.getUpVotes() + "|" + manager.getDownVotes() + ")");
         return builder.build();
-
     }
+
 }

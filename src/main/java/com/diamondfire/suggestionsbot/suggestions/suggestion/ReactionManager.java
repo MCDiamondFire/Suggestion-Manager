@@ -1,18 +1,16 @@
 package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
+import com.diamondfire.suggestionsbot.suggestions.reactions.FlagReaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
-import com.diamondfire.suggestionsbot.suggestions.reactions.flag.ReactionFlag;
-import com.diamondfire.suggestionsbot.util.BotConstants;
+import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReactionManager {
-
 
     private final int upVotes;
     private final int downVotes;
@@ -21,16 +19,22 @@ public class ReactionManager {
     public ReactionManager(Suggestion suggestion) {
         List<MessageReaction> reactions = suggestion.getSuggestion().getReactions().stream()
                 .filter(reaction -> reaction.getEmoji() instanceof CustomEmoji)
-                .collect(Collectors.toList());
+                .toList();
 
-        downVotes = reactions.stream()
-                .filter(reaction -> reaction.getEmoji().asCustom().getIdLong() == BotConstants.DOWNVOTE)
+        this.downVotes = reactions.stream()
+                .filter(reaction -> {
+                    Reaction react = ReactionHandler.getReaction(reaction);
+                    return react != null && react.isDownvote();
+                })
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;
 
-        upVotes = reactions.stream()
-                .filter(reaction -> reaction.getEmoji().asCustom().getIdLong() == BotConstants.UPVOTE)
+        this.upVotes = reactions.stream()
+                .filter(reaction -> {
+                    Reaction react = ReactionHandler.getReaction(reaction);
+                    return react != null && react.isUpvote();
+                })
                 .findFirst()
                 .map(MessageReaction::getCount)
                 .orElse(1) - 1;
@@ -40,26 +44,32 @@ public class ReactionManager {
     }
 
     public int getNetVotes() {
-        return upVotes - downVotes;
+        return this.upVotes - this.downVotes;
     }
 
     public int getUpVotes() {
-        return upVotes;
+        return this.upVotes;
     }
 
     public int getDownVotes() {
-        return downVotes;
+        return this.downVotes;
     }
 
     public List<Reaction> getReactions() {
-        return reactions;
+        return this.reactions;
     }
 
-    public Reaction getTopReaction() {
-        return getReactions().stream().max(Comparator.comparingInt(Reaction::getPriority)).orElse(null);
+    public ResultReaction getTopReaction() {
+        return (ResultReaction) this.getReactions().stream()
+                .filter(reaction -> reaction instanceof ResultReaction)
+                .max(Comparator.comparingInt(reaction -> ((ResultReaction) reaction).getPriority()))
+                .orElse(null);
     }
 
     public boolean canGoPopular() {
-        return getReactions().stream().filter((reaction -> reaction instanceof ReactionFlag)).noneMatch((reaction -> ((ReactionFlag) reaction).preventPopular()));
+        return this.getReactions().stream()
+                .filter(reaction -> reaction instanceof FlagReaction)
+                .noneMatch(reaction -> ((FlagReaction) reaction).isPreventPopular());
     }
+
 }

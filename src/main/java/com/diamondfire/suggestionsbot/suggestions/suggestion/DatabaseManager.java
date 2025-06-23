@@ -2,26 +2,30 @@ package com.diamondfire.suggestionsbot.suggestions.suggestion;
 
 import com.diamondfire.suggestionsbot.database.ConnectionProvider;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
+import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 //TODO Migrate to the new query system
 public class DatabaseManager {
-    private final Suggestion suggestion;
 
+    private final Suggestion suggestion;
 
     public DatabaseManager(Suggestion suggestion) {
         this.suggestion = suggestion;
-
     }
 
     public void addToDatabase() {
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO suggestions (message, message_channel, popular_message, discussion_message, author_id, date, upvotes, downvotes, special_reactions) VALUES(?,?,?,?,?,?,?,?,?)")) {
 
-            handleStatement(preparedStatement);
+            this.handleStatement(preparedStatement);
 
             preparedStatement.execute();
 
@@ -35,7 +39,7 @@ public class DatabaseManager {
              PreparedStatement statement = connection.prepareStatement("UPDATE suggestions SET message = ?, message_channel = ?, popular_message = ?, discussion_message = ?, author_id = ?, date = ?, upvotes = ?, downvotes = ?, special_reactions = ? WHERE message = ?")) {
 
             handleStatement(statement);
-            statement.setLong(10, suggestion.getSuggestion().getIdLong());
+            statement.setLong(10, this.suggestion.getSuggestion().getIdLong());
 
             statement.execute();
 
@@ -48,7 +52,7 @@ public class DatabaseManager {
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(" SELECT * FROM suggestions WHERE message = ?;")) {
 
-            statement.setLong(1, suggestion.getSuggestion().getIdLong());
+            statement.setLong(1, this.suggestion.getSuggestion().getIdLong());
 
             ResultSet rs = statement.executeQuery();
 
@@ -71,7 +75,7 @@ public class DatabaseManager {
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM suggestions WHERE message = ?;")) {
 
-            statement.setLong(1, suggestion.getSuggestion().getIdLong());
+            statement.setLong(1, this.suggestion.getSuggestion().getIdLong());
             statement.execute();
 
             ResultSet rs = statement.executeQuery();
@@ -98,26 +102,23 @@ public class DatabaseManager {
         return 0;
     }
 
-
     private void handleStatement(PreparedStatement statement) throws SQLException {
-        Message message = suggestion.getSuggestion();
-        ReactionManager manager = suggestion.reactionManager;
+        Message message = this.suggestion.getSuggestion();
+        ReactionManager manager = this.suggestion.getReactionManager();
 
         statement.setLong(1, message.getIdLong());
         statement.setLong(2, message.getChannel().getIdLong());
-        statement.setLong(3, suggestion.referenceManager.getReferenceLong("popular_message"));
-        statement.setLong(4, suggestion.referenceManager.getReferenceLong("discussion_message"));
+        statement.setLong(3, this.suggestion.getReferenceManager().getReferenceLong("popular_message"));
+        statement.setLong(4, this.suggestion.getReferenceManager().getReferenceLong("discussion_message"));
         statement.setLong(5, message.getAuthor().getIdLong());
         statement.setTimestamp(6, Timestamp.from(message.getTimeCreated().toInstant()));
         statement.setInt(7, manager.getUpVotes());
         statement.setInt(8, manager.getDownVotes());
-        statement.setString(9, getFormattedReactions());
+        statement.setString(9, this.getFormattedReactions());
     }
-
 
     private String getFormattedReactions() {
-        return suggestion.reactionManager.getReactions().stream().map((Reaction::getIdentifier)).collect(Collectors.joining(","));
+        return this.suggestion.getReactionManager().getReactions().stream().map(Reaction::getIdentifier).collect(Collectors.joining(","));
     }
-
 
 }
