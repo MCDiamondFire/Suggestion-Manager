@@ -1,7 +1,6 @@
 package com.diamondfire.suggestionsbot;
 
 import com.diamondfire.suggestionsbot.command.CommandHandler;
-import com.diamondfire.suggestionsbot.command.impl.CloneCommand;
 import com.diamondfire.suggestionsbot.command.impl.InfoCommand;
 import com.diamondfire.suggestionsbot.command.impl.PopularCommand;
 import com.diamondfire.suggestionsbot.command.impl.StatsCommand;
@@ -29,7 +28,6 @@ public final class BotInstance {
                 new StatsCommand(),
                 new InfoCommand(),
                 new PopularCommand(),
-                new CloneCommand(),
                 new WhenCommand()
         );
 

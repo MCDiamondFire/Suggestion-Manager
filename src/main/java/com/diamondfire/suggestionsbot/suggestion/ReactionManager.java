@@ -1,9 +1,9 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion;
+package com.diamondfire.suggestionsbot.suggestion;
 
-import com.diamondfire.suggestionsbot.suggestions.reactions.FlagReaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
+import com.diamondfire.suggestionsbot.reactions.FlagReaction;
+import com.diamondfire.suggestionsbot.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.ReactionHandler;
+import com.diamondfire.suggestionsbot.reactions.ResultReaction;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
@@ -14,7 +14,7 @@ public class ReactionManager {
 
     private final int upVotes;
     private final int downVotes;
-    private final List<Reaction> reactions;
+    private final List<ResultReaction> reactions;
 
     public ReactionManager(Suggestion suggestion) {
         List<MessageReaction> reactions = suggestion.getSuggestion().getReactions().stream()
@@ -55,14 +55,13 @@ public class ReactionManager {
         return this.downVotes;
     }
 
-    public List<Reaction> getReactions() {
+    public List<ResultReaction> getReactions() {
         return this.reactions;
     }
 
     public ResultReaction getTopReaction() {
-        return (ResultReaction) this.getReactions().stream()
-                .filter(reaction -> reaction instanceof ResultReaction)
-                .max(Comparator.comparingInt(reaction -> ((ResultReaction) reaction).getPriority()))
+        return this.getReactions().stream()
+                .max(Comparator.comparingInt(reaction -> reaction.getPriority()))
                 .orElse(null);
     }
 

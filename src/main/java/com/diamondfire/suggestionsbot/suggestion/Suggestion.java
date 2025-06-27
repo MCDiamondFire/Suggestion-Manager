@@ -1,10 +1,10 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion;
+package com.diamondfire.suggestionsbot.suggestion;
 
 import com.diamondfire.suggestionsbot.BotInstance;
+import com.diamondfire.suggestionsbot.channels.ChannelHandler;
+import com.diamondfire.suggestionsbot.channels.SuggestionsChannel;
 import com.diamondfire.suggestionsbot.database.ConnectionProvider;
-import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
-import com.diamondfire.suggestionsbot.suggestions.channels.SuggestionsChannel;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.ReferenceManager;
+import com.diamondfire.suggestionsbot.suggestion.replies.ReferenceManager;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.jspecify.annotations.NullMarked;

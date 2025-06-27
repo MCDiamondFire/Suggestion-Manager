@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.suggestions.reactions;
+package com.diamondfire.suggestionsbot.reactions;
 
 import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.util.config.type.reaction.ConfigDownvoteReaction;

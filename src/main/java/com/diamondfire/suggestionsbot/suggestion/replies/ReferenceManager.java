@@ -1,10 +1,9 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion.replies;
+package com.diamondfire.suggestionsbot.suggestion.replies;
 
-import com.diamondfire.suggestionsbot.BotInstance;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.DiscussionReference;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.Reference;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.types.DiscussionReference;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.types.PopularReference;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
@@ -23,8 +22,8 @@ public class ReferenceManager {
 
         this.suggestion = suggestion;
 
-        this.fetchReference(new PopularReference(suggestion.getSuggestion().getGuildId()));
-        this.fetchReference(new DiscussionReference(suggestion.getSuggestion().getGuildId()));
+        this.fetchReference(new PopularReference(suggestion.getSuggestion().getGuildIdLong()));
+        this.fetchReference(new DiscussionReference(suggestion.getSuggestion().getGuildIdLong()));
 
 
     }
@@ -34,7 +33,7 @@ public class ReferenceManager {
             return;
         }
 
-        TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelId());
+        TextChannel channel = reference.getChannel();
         if (channel == null) {
             return;
         }
@@ -71,7 +70,7 @@ public class ReferenceManager {
 
         Message message = null;
         try {
-            TextChannel channel = BotInstance.getJda().getTextChannelById(reference.getChannelId());
+            TextChannel channel = reference.getChannel();
             if (channel == null) {
                 return;
             }

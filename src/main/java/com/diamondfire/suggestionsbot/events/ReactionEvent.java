@@ -1,16 +1,14 @@
 package com.diamondfire.suggestionsbot.events;
 
-import com.diamondfire.suggestionsbot.BotInstance;
-import com.diamondfire.suggestionsbot.command.permissions.Permission;
-import com.diamondfire.suggestionsbot.command.permissions.PermissionHandler;
-import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
-import com.diamondfire.suggestionsbot.suggestions.channels.SuggestionsChannel;
-import com.diamondfire.suggestionsbot.suggestions.reactions.FlagReaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.channels.ChannelHandler;
+import com.diamondfire.suggestionsbot.channels.SuggestionsChannel;
+import com.diamondfire.suggestionsbot.guild.BotGuilds;
+import com.diamondfire.suggestionsbot.reactions.FlagReaction;
+import com.diamondfire.suggestionsbot.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.ReactionHandler;
+import com.diamondfire.suggestionsbot.reactions.ResultReaction;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
 import com.diamondfire.suggestionsbot.util.Util;
-import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -46,11 +44,9 @@ public class ReactionEvent extends ListenerAdapter {
             return;
         }
 
-        if (reaction.isNetScore()) {
-            if (message.getAuthor().getIdLong() == event.getUser().getIdLong()) {
-                message.removeReaction(reactionEmote, event.getUser()).queue();
-                return;
-            }
+        if (reaction.isNetScore() && message.getAuthor().getIdLong() == event.getUser().getIdLong()) {
+            message.removeReaction(reactionEmote, event.getUser()).queue();
+            return;
         }
 
         Suggestion suggestion = Suggestion.deepFind(message);
@@ -73,7 +69,6 @@ public class ReactionEvent extends ListenerAdapter {
 
         //TODO Cleaner implementation for this, maybe some kind of new "throwaway" reference.
         if (reaction instanceof FlagReaction flag && ReactionHandler.isFirst(message, reactionEmote)) {
-
             String postName = suggestionsChannel.getPostName();
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
@@ -82,7 +77,7 @@ public class ReactionEvent extends ListenerAdapter {
             builder.setColor(flag.getColor());
             builder.addField("\u200b", Util.trim(suggestionMSG.getContentRaw(), EMBED_BODY_MAX_LENGTH), false);
 
-            TextChannel channel = BotInstance.getJda().getTextChannelById(ConfigLoader.getConfig().getGuilds().get(message.getGuildId()).getLogChannel());
+            TextChannel channel = BotGuilds.get(event.getGuild()).getLogChannel();
             if (channel == null) {
                 return;
             }
@@ -107,7 +102,7 @@ public class ReactionEvent extends ListenerAdapter {
             return;
         }
 
-        if (PermissionHandler.getPermission(member).getPermissionLevel() >= Permission.MOD.getPermissionLevel() && ReactionHandler.getReaction(reactionEmote) != null) {
+        if (BotGuilds.get(event.getGuild()).getPermissionLevel(member) >= 1 && ReactionHandler.getReaction(reactionEmote) instanceof ResultReaction) {
             suggestion.getReferenceManager().removeReaction(reactionEmote);
             suggestion.getReferenceManager().plainRefresh();
         }

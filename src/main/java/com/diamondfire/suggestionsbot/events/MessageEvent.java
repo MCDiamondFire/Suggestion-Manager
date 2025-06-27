@@ -1,9 +1,7 @@
 package com.diamondfire.suggestionsbot.events;
 
-import com.diamondfire.suggestionsbot.BotInstance;
-import com.diamondfire.suggestionsbot.suggestions.channels.ChannelHandler;
-import com.diamondfire.suggestionsbot.suggestions.channels.SuggestionsChannel;
-import com.diamondfire.suggestionsbot.util.BotConstants;
+import com.diamondfire.suggestionsbot.channels.ChannelHandler;
+import com.diamondfire.suggestionsbot.channels.SuggestionsChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

@@ -1,6 +1,6 @@
 package com.diamondfire.suggestionsbot;
 
-import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
+import com.diamondfire.suggestionsbot.reactions.PopularHandler;
 
 public class SuggestionsBot {
 

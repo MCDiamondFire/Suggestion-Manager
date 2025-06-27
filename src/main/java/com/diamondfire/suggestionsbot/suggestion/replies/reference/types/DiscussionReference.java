@@ -1,23 +1,24 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types;
+package com.diamondfire.suggestionsbot.suggestion.replies.reference.types;
 
-import com.diamondfire.suggestionsbot.suggestions.reactions.ResultReaction;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.Reference;
+import com.diamondfire.suggestionsbot.guild.BotGuilds;
+import com.diamondfire.suggestionsbot.reactions.ResultReaction;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.Reference;
 import com.diamondfire.suggestionsbot.util.Util;
-import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.awt.Color;
 
 public class DiscussionReference extends Reference {
 
-    private final long channelId;
+    private final TextChannel channel;
 
-    public DiscussionReference(String guildId) {
-        this.channelId = ConfigLoader.getConfig().getGuilds().get(guildId).getDiscussionChannel();
+    public DiscussionReference(long guildId) {
+        this.channel = BotGuilds.get(guildId).getDiscussionChannel();
     }
 
     @Override
@@ -26,8 +27,8 @@ public class DiscussionReference extends Reference {
     }
 
     @Override
-    public long getChannelId() {
-        return this.channelId;
+    public TextChannel getChannel() {
+        return this.channel;
     }
 
     @Override

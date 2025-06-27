@@ -1,10 +1,9 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 import com.diamondfire.suggestionsbot.command.BotCommand;
-import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
+import com.diamondfire.suggestionsbot.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
@@ -22,8 +21,8 @@ import java.util.stream.Collectors;
 public class StatsCommand implements BotCommand {
 
     @Override
-    public Permission getPermission() {
-        return Permission.USER;
+    public int getPermissionLevel() {
+        return 0;
     }
 
     @Command("stats [user]")

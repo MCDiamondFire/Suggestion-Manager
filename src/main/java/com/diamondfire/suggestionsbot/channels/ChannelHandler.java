@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.suggestions.channels;
+package com.diamondfire.suggestionsbot.channels;
 
 import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import com.diamondfire.suggestionsbot.util.config.type.ConfigSuggestionsChannel;

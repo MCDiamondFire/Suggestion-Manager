@@ -1,7 +1,8 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion;
+package com.diamondfire.suggestionsbot.suggestion;
 
 import com.diamondfire.suggestionsbot.database.ConnectionProvider;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.ResultReaction;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.sql.Connection;
@@ -117,7 +118,9 @@ public class DatabaseManager {
     }
 
     private String getFormattedReactions() {
-        return this.suggestion.getReactionManager().getReactions().stream().map(Reaction::getIdentifier).collect(Collectors.joining(","));
+        return this.suggestion.getReactionManager().getReactions().stream()
+                .filter(reaction -> reaction instanceof ResultReaction)
+                .map(Reaction::getIdentifier).collect(Collectors.joining(","));
     }
 
 }

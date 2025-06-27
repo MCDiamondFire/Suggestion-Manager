@@ -1,10 +1,11 @@
-package com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference;
+package com.diamondfire.suggestionsbot.suggestion.replies.reference;
 
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.reactions.ReactionHandler;
+import com.diamondfire.suggestionsbot.reactions.ResultReaction;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public abstract class Reference {
 
     public abstract String getName();
 
-    public abstract long getChannelId();
+    public abstract TextChannel getChannel();
 
     public abstract boolean syncEmojis();
 
@@ -37,15 +38,15 @@ public abstract class Reference {
 
     public void refresh(Suggestion suggestion) {
         if (this.syncEmojis()) {
-            List<Reaction> referenceReactions = new ArrayList<>(ReactionHandler.getReactions(this.getReference()));
-            List<Reaction> suggestionReactions = suggestion.getReactionManager().getReactions();
+            List<ResultReaction> referenceReactions = new ArrayList<>(ReactionHandler.getReactions(this.getReference()));
+            List<ResultReaction> suggestionReactions = suggestion.getReactionManager().getReactions();
 
-            for (Reaction reaction : referenceReactions) {
+            for (ResultReaction reaction : referenceReactions) {
                 if (!suggestionReactions.contains(reaction)) {
                     suggestion.getSuggestion().addReaction(reaction.getJda()).complete();
                 }
             }
-            for (Reaction reaction : suggestionReactions) {
+            for (ResultReaction reaction : suggestionReactions) {
                 if (!referenceReactions.contains(reaction)) {
                     this.getReference().addReaction(reaction.getJda()).complete();
                 }

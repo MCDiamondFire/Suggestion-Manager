@@ -3,18 +3,17 @@ package com.diamondfire.suggestionsbot.command.impl;
 
 import com.diamondfire.suggestionsbot.BotInstance;
 import com.diamondfire.suggestionsbot.command.BotCommand;
-import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.guild.BotGuilds;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import org.checkerframework.checker.units.qual.C;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.parser.Parser;
-import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.discord.jda5.JDAInteraction;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +23,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class InfoCommand implements BotCommand {
 
     @Override
-    public Permission getPermission() {
-        return Permission.MOD;
+    public int getPermissionLevel() {
+        return 1;
     }
 
     @Parser(name = "suggestion")
@@ -47,11 +46,30 @@ public class InfoCommand implements BotCommand {
         return suggestion.get();
     }
 
-    @Command("info <suggestion>")
+    @Command("info [suggestion]")
     @CommandDescription("Gets current open references to a specific message.")
-    public void command(final @NotNull JDAInteraction interaction, @Argument(value = "suggestion", parserName = "suggestion") Suggestion suggestion) {
+    public void suggestionInfo(final @NotNull JDAInteraction interaction, @Argument(value = "suggestion", parserName = "suggestion") Suggestion suggestion) {
+        if (suggestion == null) {
+            this.showUserInfo(interaction);
+            return;
+        }
         EmbedBuilder builder = new EmbedBuilder();
         builder.addField("References: ", String.join("\n", suggestion.getReferenceManager().getReferences().keySet()), true);
+
+        IReplyCallback replyCallback = interaction.replyCallback();
+        if (replyCallback == null) {
+            return;
+        }
+        replyCallback.replyEmbeds(builder.build()).queue();
+    }
+
+    public void showUserInfo(final @NotNull JDAInteraction interaction) {
+        EmbedBuilder builder = new EmbedBuilder();
+        Guild guild = interaction.guild();
+        if (guild == null) {
+            return;
+        }
+        builder.addField("Your Permission Level", "" + BotGuilds.get(guild).getPermissionLevel(interaction.user()), true);
 
         IReplyCallback replyCallback = interaction.replyCallback();
         if (replyCallback == null) {

@@ -1,14 +1,14 @@
-package com.diamondfire.suggestionsbot.suggestions.channels;
+package com.diamondfire.suggestionsbot.channels;
 
 import com.diamondfire.suggestionsbot.BotInstance;
-import com.diamondfire.suggestionsbot.suggestions.reactions.PopularHandler;
-import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
-import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.ReactionManager;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.Suggestion;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.ReferenceManager;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.DiscussionReference;
-import com.diamondfire.suggestionsbot.suggestions.suggestion.replies.reference.types.PopularReference;
+import com.diamondfire.suggestionsbot.reactions.PopularHandler;
+import com.diamondfire.suggestionsbot.reactions.Reaction;
+import com.diamondfire.suggestionsbot.reactions.ReactionHandler;
+import com.diamondfire.suggestionsbot.suggestion.ReactionManager;
+import com.diamondfire.suggestionsbot.suggestion.Suggestion;
+import com.diamondfire.suggestionsbot.suggestion.replies.ReferenceManager;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.types.DiscussionReference;
+import com.diamondfire.suggestionsbot.suggestion.replies.reference.types.PopularReference;
 import com.diamondfire.suggestionsbot.util.config.type.ConfigSuggestionsChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -43,7 +43,7 @@ public class SuggestionsChannel {
         }
         this.reactions = Collections.unmodifiableList(reacts);
 
-        TextChannel textChannel = BotInstance.getJda().getChannelById(TextChannel.class, this.id);
+        TextChannel textChannel = BotInstance.getJda().getTextChannelById(this.id);
         if (textChannel == null) {
             throw new IllegalArgumentException("Channel ID " + this.id + " is null");
         }
@@ -57,7 +57,7 @@ public class SuggestionsChannel {
         // Here we initialize a new suggestion and add it to the database. After, we can discard it...
         Suggestion suggestion = new Suggestion(message);
         suggestion.getDatabaseManager().addToDatabase();
-        suggestion.getReferenceManager().newReference(new DiscussionReference(message.getGuildId()));
+        suggestion.getReferenceManager().newReference(new DiscussionReference(message.getGuildIdLong()));
 
     }
 
@@ -74,9 +74,9 @@ public class SuggestionsChannel {
         ReferenceManager referenceManager = suggestion.getReferenceManager();
         if (reactionManager.getNetVotes() >= PopularHandler.getRatio() && reactionManager.canGoPopular() && suggestion.getSuggestionsChannel().canGoPopular && ChannelHandler.getSuggestionsChannelOrNull(event.getChannel().getIdLong()) != null) {
             if (d2.after(d1)) {
-                referenceManager.newReference(new PopularReference(message.getGuildId()));
+                referenceManager.newReference(new PopularReference(message.getGuildIdLong()));
             } else if (reactionManager.getNetVotes() == PopularHandler.getRatio()) {
-                referenceManager.newReference(new PopularReference(message.getGuildId()));
+                referenceManager.newReference(new PopularReference(message.getGuildIdLong()));
             }
 
         }

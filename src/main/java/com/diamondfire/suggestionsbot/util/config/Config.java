@@ -6,7 +6,6 @@ import com.diamondfire.suggestionsbot.util.config.type.reaction.ConfigReaction;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Map;
 
 public class Config {
 
@@ -17,7 +16,7 @@ public class Config {
     private String dbUser;
     @SerializedName("db_password")
     private String dbPassword;
-    private Map<String, ConfigGuild> guilds;
+    private List<ConfigGuild> guilds;
     private List<ConfigSuggestionsChannel> channels;
     private List<ConfigReaction> reactions;
 
@@ -37,7 +36,7 @@ public class Config {
         return this.dbPassword;
     }
 
-    public Map<String, ConfigGuild> getGuilds() {
+    public List<ConfigGuild> getGuilds() {
         return this.guilds;
     }
 

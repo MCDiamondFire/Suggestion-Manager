@@ -1,4 +1,4 @@
-package com.diamondfire.suggestionsbot.suggestions.reactions;
+package com.diamondfire.suggestionsbot.reactions;
 
 import com.diamondfire.suggestionsbot.util.config.ConfigLoader;
 import com.diamondfire.suggestionsbot.util.config.type.reaction.ConfigFlagReaction;
@@ -63,16 +63,16 @@ public final class ReactionHandler {
         return identifierMap.get(identifier);
     }
 
-    public static List<Reaction> getReactions(Message message) {
-        List<Reaction> reactions = new ArrayList<>();
+    public static List<ResultReaction> getReactions(Message message) {
+        List<ResultReaction> reactions = new ArrayList<>();
 
         for (MessageReaction reaction : message.getReactions()) {
-            if (!(reaction instanceof CustomEmoji)) {
+            if (!(reaction.getEmoji() instanceof CustomEmoji)) {
                 continue;
             }
-            Reaction sugReaction = ReactionHandler.getReaction(reaction.getEmoji().asCustom().getIdLong());
-            if (sugReaction != null) {
-                reactions.add(sugReaction);
+            Reaction react = ReactionHandler.getReaction(reaction.getEmoji().asCustom().getIdLong());
+            if (react instanceof ResultReaction resultReaction) {
+                reactions.add(resultReaction);
             }
         }
 

@@ -1,7 +1,6 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 import com.diamondfire.suggestionsbot.command.BotCommand;
-import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import org.incendo.cloud.annotations.Command;
@@ -12,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 public class WhenCommand implements BotCommand {
 
     @Override
-    public Permission getPermission() {
-        return Permission.USER;
+    public int getPermissionLevel() {
+        return 0;
     }
 
     @Command("when")
