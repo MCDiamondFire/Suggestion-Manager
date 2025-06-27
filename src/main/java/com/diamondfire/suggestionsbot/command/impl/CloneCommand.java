@@ -1,15 +1,18 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
 
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-import com.diamondfire.suggestionsbot.command.help.HelpContext;
-import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
+import com.diamondfire.suggestionsbot.command.BotCommand;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.discord.jda5.JDAInteraction;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,51 +20,36 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class CloneCommand extends Command {
+public class CloneCommand implements BotCommand {
 
-    @Override
-    public String getName() {
-        return "clone";
-    }
-
-    @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Clones a specific channels contents to #guidelines.")
-                .addArgument(new HelpContextArgument()
-                        .name("Channel ID to clone")
-                );
-    }
-
-    @Override
-    public ArgumentSet getArguments() {
-        return new ArgumentSet().addArgument("id",
-                new LongArgument());
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(CloneCommand.class);
 
     @Override
     public Permission getPermission() {
         return Permission.MOD;
     }
 
-    @Override
-    public void run(CommandEvent event) {
-        TextChannel channelToClone = event.getGuild().getTextChannelById(event.getArgument("id"));
-        TextChannel toChannel = event.getGuild().getTextChannelsByName("guidelines", true).getFirst();
+    @Command("clone <id>")
+    public void command(final @NotNull JDAInteraction interaction, @Argument("id") TextChannel channelToClone) {
+        Guild guild = interaction.guild();
+        if (guild == null) {
+            return;
+        }
+        TextChannel toChannel = guild.getTextChannelsByName("guidelines", true).getFirst();
         if (channelToClone == null) {
             return;
         }
         List<Message> toPurge = MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).complete().getRetrievedHistory();
 
-        MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).queue(msgs -> {
-            List<Message> history = new ArrayList<>(msgs.getRetrievedHistory());
+        MessageHistory.getHistoryFromBeginning(channelToClone).limit(100).queue(messageHistory -> {
+            List<Message> history = new ArrayList<>(messageHistory.getRetrievedHistory());
             Collections.reverse(history);
             for (Message msg : history) {
                 msg.forwardTo(toChannel).queue();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Exception thrown while purging history", e);
                 }
             }
 
@@ -72,12 +60,10 @@ public class CloneCommand extends Command {
                 try {
                     future.get();
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Exception thrown while purging history", e);
                 }
             }
         }).start();
-
-
     }
 
 }

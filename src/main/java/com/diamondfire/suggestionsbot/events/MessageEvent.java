@@ -19,15 +19,6 @@ public class MessageEvent extends ListenerAdapter {
         Message message = event.getMessage();
         long channelId = event.getChannel().getIdLong();
 
-        if (message.getContentDisplay().startsWith(BotConstants.PREFIX)) {
-            try {
-                CommandEvent commandEvent = new CommandEvent(event.getJDA(), event.getResponseNumber(), event.getMessage());
-                BotInstance.getHandler().run(commandEvent);
-                return;
-            } catch (IllegalArgumentException ignored) {
-            }
-        }
-
         SuggestionsChannel channel = ChannelHandler.getSuggestionsChannelOrNull(channelId);
         if (channel != null) {
             channel.onMessage(message);

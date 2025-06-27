@@ -2,8 +2,6 @@ package com.diamondfire.suggestionsbot;
 
 import com.diamondfire.suggestionsbot.command.CommandHandler;
 import com.diamondfire.suggestionsbot.command.impl.CloneCommand;
-import com.diamondfire.suggestionsbot.command.impl.EvalCommand;
-import com.diamondfire.suggestionsbot.command.impl.HelpCommand;
 import com.diamondfire.suggestionsbot.command.impl.InfoCommand;
 import com.diamondfire.suggestionsbot.command.impl.PopularCommand;
 import com.diamondfire.suggestionsbot.command.impl.StatsCommand;
@@ -20,19 +18,17 @@ import java.util.List;
 
 public final class BotInstance {
 
-    private static final CommandHandler handler = new CommandHandler();
+    private static final CommandHandler COMMAND_HANDLER = new CommandHandler();
     private static JDA jda;
 
     private BotInstance() {
     }
 
     public static void start() throws InterruptedException {
-        handler.register(
-                new HelpCommand(),
+        COMMAND_HANDLER.register(
                 new StatsCommand(),
                 new InfoCommand(),
                 new PopularCommand(),
-                new EvalCommand(),
                 new CloneCommand(),
                 new WhenCommand()
         );
@@ -40,7 +36,7 @@ public final class BotInstance {
         JDABuilder builder = JDABuilder.createDefault(ConfigLoader.getConfig().getToken());
         builder.enableIntents(List.of(GatewayIntent.MESSAGE_CONTENT));
         builder.setStatus(OnlineStatus.ONLINE);
-        builder.addEventListeners(new MessageEvent(), new ReactionEvent());
+        builder.addEventListeners(new MessageEvent(), new ReactionEvent(), COMMAND_HANDLER.getManager().createListener());
 
         jda = builder.build();
         jda.awaitReady();
@@ -50,8 +46,8 @@ public final class BotInstance {
         return jda;
     }
 
-    public static CommandHandler getHandler() {
-        return handler;
+    public static CommandHandler getCommandHandler() {
+        return COMMAND_HANDLER;
     }
 
 }

@@ -1,59 +1,38 @@
 package com.diamondfire.suggestionsbot.command.impl;
 
-import com.diamondfire.suggestionsbot.BotInstance;
-import com.diamondfire.suggestionsbot.command.argument.ArgumentSet;
-import com.diamondfire.suggestionsbot.command.argument.impl.types.LongArgument;
-import com.diamondfire.suggestionsbot.command.help.HelpContext;
-import com.diamondfire.suggestionsbot.command.help.HelpContextArgument;
+import com.diamondfire.suggestionsbot.command.BotCommand;
 import com.diamondfire.suggestionsbot.command.permissions.Permission;
 import com.diamondfire.suggestionsbot.database.SingleQueryBuilder;
-import com.diamondfire.suggestionsbot.events.CommandEvent;
 import com.diamondfire.suggestionsbot.suggestions.reactions.Reaction;
 import com.diamondfire.suggestionsbot.suggestions.reactions.ReactionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.IMentionable;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.discord.jda5.JDAInteraction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-public class StatsCommand extends Command {
-
-    @Override
-    public String getName() {
-        return "stats";
-    }
-
-    @Override
-    public HelpContext getHelpContext() {
-        return new HelpContext()
-                .description("Gets stats on a specific user")
-                .addArgument(new HelpContextArgument()
-                        .name("User ID")
-                        .optional()
-                );
-    }
-
-    @Override
-    public ArgumentSet getArguments() {
-        return new ArgumentSet().addArgument("user",
-                new LongArgument().optional(null));
-    }
+public class StatsCommand implements BotCommand {
 
     @Override
     public Permission getPermission() {
         return Permission.USER;
     }
 
-    @Override
-    public void run(CommandEvent event) {
+    @Command("stats [user]")
+    @CommandDescription("Gets statistics on a specific user.")
+    public void command(final @NotNull JDAInteraction interaction, final @Argument("user") IMentionable user) {
         EmbedBuilder builder = new EmbedBuilder();
-        final long id;
-        if (event.getArgument("user") == null) {
-            id = event.getAuthor().getIdLong();
-        } else {
-            id = event.getArgument("user");
+        final long id = interaction.user().getIdLong();
+        if (user != null) {
+            user.getIdLong();
         }
 
         new SingleQueryBuilder().query("SELECT * from suggestions WHERE author_id = ?", statement ->
@@ -88,8 +67,7 @@ public class StatsCommand extends Command {
             }
             builder.setTitle("Stats:");
 
-            User user = BotInstance.getJda().retrieveUserById(id).complete();
-            builder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
+            builder.setAuthor(interaction.user().getName(), null, interaction.user().getEffectiveAvatarUrl());
             String[] stats = new String[]{
                     "Total Suggestions: " + suggestionCount,
                     "Total Upvotes: " + upVotes,
@@ -105,7 +83,10 @@ public class StatsCommand extends Command {
 
         }).onNotFound(() -> builder.setTitle("Player not found!")).execute();
 
-        event.getChannel().sendMessageEmbeds(builder.build()).queue();
+        IReplyCallback replyCallback = interaction.replyCallback();
+        if (replyCallback != null) {
+            replyCallback.replyEmbeds(builder.build()).queue();
+        }
     }
 
 }
