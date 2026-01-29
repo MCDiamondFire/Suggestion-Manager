@@ -40,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/mcdiamondfire/helpbot
+          images: ghcr.io/mcdiamondfire/suggestion-manager
           tags: |
             type=ref,event=branch
             type=sha
