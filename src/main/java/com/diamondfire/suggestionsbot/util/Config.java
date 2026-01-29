@@ -63,7 +63,7 @@ public class Config {
         properties.put(USER_KEY, "db-user");
         properties.put(PASSWORD_KEY, "db-password");
         properties.put(URL_KEY, "url");
-        properties.put(WEBHOOK_URL, "webhook-url.com");
+        properties.put(SECRET_SUGGESTIONS_KEY, "webhook-url.com");
 
         return properties;
     }
