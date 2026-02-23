@@ -45,6 +45,7 @@ jobs:
             type=ref,event=branch
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{branch}}-{{date 'YYYYMMDDHHmmss' tz='UTC'}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
